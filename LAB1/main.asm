@@ -1,4 +1,6 @@
 ########################################
+# 2025 Gabriel de Medeiros Matos
+#
 # Programa p/ cálculo da DFT aproximada
 # de um vetor X de tamanho N
 ########################################
