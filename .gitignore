@@ -1,0 +1,4 @@
+*.vwf
+*.qmsg
+**/db/
+*.rpt
