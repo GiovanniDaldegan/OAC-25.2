@@ -27,9 +27,9 @@ parameter
 
     /*OpCodes */
     OPC_LOAD        = 7'b0000011,
-    OPC_OPIMM           = 7'b0010011,
+    OPC_OPIMM       = 7'b0010011,
     OPC_STORE       = 7'b0100011,
-    OPC_RTYPE           = 7'b0110011,
+    OPC_RTYPE       = 7'b0110011,
     OPC_BRANCH      = 7'b1100011,
     OPC_JALR        = 7'b1100111,
     OPC_JAL         = 7'b1101111,
