@@ -2,3 +2,5 @@
 *.qmsg
 **/db/
 *.rpt
+*.qws
+*.bak
