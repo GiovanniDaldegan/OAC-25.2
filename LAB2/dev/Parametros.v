@@ -33,6 +33,7 @@ parameter
     OPC_BRANCH      = 7'b1100011,
     OPC_JALR        = 7'b1100111,
     OPC_JAL         = 7'b1101111,
+    OPC_LUI         = 7'b0110111;
 
     /* Funct 7 */
     FUNCT7_ADD      = 7'b0000000,

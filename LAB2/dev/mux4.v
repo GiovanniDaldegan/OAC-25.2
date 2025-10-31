@@ -1,10 +1,10 @@
-/* Multiplexador de 4 entradas de 32b cada*/
+/* Multiplexador 4x1 com entradas de 32b */
 
 module mux4 (
    input  wire [31:0] entr0, entr1, entr2, entr3,
    input  wire [1:0]  select,
    output wire [31:0] out
-   );
+);
 
 initial
 begin
