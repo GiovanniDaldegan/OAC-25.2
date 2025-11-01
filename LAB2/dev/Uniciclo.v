@@ -14,7 +14,7 @@ module Uniciclo (
         begin
             PC      <= 32'h0040_0000;
             Instr   <= 32'b0;
-            regout  <= 32'b0;
+            RegOut  <= 32'b0;
         end
         
         wire [31:0] SaidaULA, Leitura2, MemData;

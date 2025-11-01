@@ -15,13 +15,13 @@ end
 always @(*)
 begin
    case (select)
-      2b'00:
+      2'b00:
          out <= entr0;
-      2b'01:
+      2'b01:
          out <= entr1;
-      2b'10:
+      2'b10:
          out <= entr2;
-      2b'11:
+      2'b11:
          out <= entr3;
    endcase
 end
