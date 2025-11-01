@@ -9,17 +9,17 @@
  * I 03: lw
  * S 23: sw
  * B 63: beq
- * J 6F: jal
  * I 67: jalr
+ * J 6F: jal
  */
 
 `ifndef PARAM
     `include "Parametros.v"
 `endif
 
-module (
+module Controle (
    input  wire [6:0] opcode,
-   output wire       Mem2Reg, LeMem, Branch, OrigULA, EscreveReg,
+   output wire       Mem2Reg, LeMem, EscreveMem, Branch, OrigULA, EscreveReg,
    output wire [1:0] opULA
 );
 
@@ -27,69 +27,78 @@ module (
 always @(*)
 begin
    case (opcode)
-      OPC_RTYPE:  // 33
-         Mem2Reg     <= 1b';
-         LeMem       <= 1b';
-         Branch      <= 1b';
-         OrigULA     <= 1b';
-         EscreveReg  <= 1b';
-         opULA       <= 2b';
-
-      OPC_OPIMM:  // 13
-         Mem2Reg     <= 1b';
-         LeMem       <= 1b';
-         Branch      <= 1b';
-         OrigULA     <= 1b';
-         EscreveReg  <= 1b';
-         opULA       <= 2b';
-
-      OPC_LUI:    // 37
-         Mem2Reg     <= 1b';
-         LeMem       <= 1b';
-         Branch      <= 1b';
-         OrigULA     <= 1b';
-         EscreveReg  <= 1b';
-         opULA       <= 2b';
-
-      OPC_LOAD:   // 03
-         Mem2Reg     <= 1b';
-         LeMem       <= 1b';
-         Branch      <= 1b';
-         OrigULA     <= 1b';
-         EscreveReg  <= 1b';
-         opULA       <= 2b';
-
-      OPC_STORE:  // 23
-         Mem2Reg     <= 1b';
-         LeMem       <= 1b';
-         Branch      <= 1b';
-         OrigULA     <= 1b';
-         EscreveReg  <= 1b';
-         opULA       <= 2b';
-
-      OPC_BRANCH: // 63
-         Mem2Reg     <= 1b';
-         LeMem       <= 1b';
-         Branch      <= 1b';
-         OrigULA     <= 1b';
-         EscreveReg  <= 1b';
-         opULA       <= 2b';
-
-      OPC_JALR:   // 67
-         Mem2Reg     <= 1b';
-         LeMem       <= 1b';
-         Branch      <= 1b';
-         OrigULA     <= 1b';
-         EscreveReg  <= 1b';
-         opULA       <= 2b';
-
-      OPC_JAL:    // 6F
-         Mem2Reg     <= 1b';
-         LeMem       <= 1b';
-         Branch      <= 1b';
-         OrigULA     <= 1b';
-         EscreveReg  <= 1b';
-         opULA       <= 2b';
+      OPC_RTYPE:  begin       // 33 - add sub slt and or
+         EscreveReg  <= 1'b1;
+         Mem2Reg     <= 1'b0;
+         LeMem       <= 1'b0;
+         EscreveMem  <= 1'b0;
+         Branch      <= 1'b0;
+         OrigULA     <= 1'b0;
+         opULA       <= 2'b10;
+      end
+      OPC_OPIMM:  begin       // 13 - addi
+         EscreveReg  <= 1'b1;
+         Mem2Reg     <= 1'b0;
+         LeMem       <= 1'b0;
+         EscreveMem  <= 1'b0;
+         Branch      <= 1'b0;
+         OrigULA     <= 1'b1;
+         opULA       <= 2'b00;
+      end
+      OPC_LUI:    begin       // 37 - lui
+         EscreveReg  <= 1'b1;
+         Mem2Reg     <= 1'b0;
+         LeMem       <= 1'b0;
+         EscreveMem  <= 1'b0;
+         Branch      <= 1'b0;
+         OrigULA     <= 1'b1;
+         opULA       <= 2'b00;
+      end
+      OPC_LOAD:   begin       // 03 - lw
+         EscreveReg  <= 1'b1;
+         Mem2Reg     <= 1'b1;
+         LeMem       <= 1'b1;
+         EscreveMem  <= 1'b0;
+         Branch      <= 1'b0;
+         OrigULA     <= 1'b1;
+         opULA       <= 2'b00;
+      end
+      OPC_STORE:  begin       // 23 - sw
+         EscreveReg  <= 1'b0;
+         Mem2Reg     <= 1'b0;
+         LeMem       <= 1'b0;
+         EscreveMem  <= 1'b1;
+         Branch      <= 1'b0;
+         OrigULA     <= 1'b1;
+         opULA       <= 2'b00;
+      end
+      OPC_BRANCH: begin       // 63 - beq
+         EscreveReg  <= 1'b0;
+         Mem2Reg     <= 1'b0;
+         LeMem       <= 1'b0;
+         EscreveMem  <= 1'b0;
+         Branch      <= 1'b1;
+         OrigULA     <= 1'b0;
+         opULA       <= 2'b01;
+      end
+      OPC_JALR:   begin       // 67 - jalr
+         EscreveReg  <= 1'b1;
+         Mem2Reg     <= 1'b0;
+         LeMem       <= 1'b0;
+         EscreveMem  <= 1'b0;
+         Branch      <= 1'b0;
+         OrigULA     <= 1'b1;
+         opULA       <= 2'b00;
+      end
+      OPC_JAL:    begin       // 6F - jal
+         EscreveReg  <= 1'b1;
+         Mem2Reg     <= 1'b0;
+         LeMem       <= 1'b0;
+         EscreveMem  <= 1'b0;
+         Branch      <= 1'b1;    // PC + {imm, 0}
+//       OrigULA     <= 1'b;
+//       opULA       <= 2'b;
+      end
    endcase
 end
 

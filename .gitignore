@@ -4,3 +4,6 @@
 *.rpt
 *.qws
 *.bak
+*.smsg
+*.summary
+# **.map
