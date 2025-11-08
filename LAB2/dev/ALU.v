@@ -10,7 +10,8 @@
  
 module ALU (
     input        [4:0]  iControl,
-    input signed [31:0] iA, iB, oResult,
+    input signed [31:0] iA, iB,
+    output logic [31:0] oResult,
     output logic        Zero
     );
 

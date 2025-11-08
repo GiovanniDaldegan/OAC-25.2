@@ -22,7 +22,7 @@ module TopDE (
 
 	
 	Uniciclo UNI1 (.clockCPU(ClockDIV), .clockMem(CLOCK), .reset(Reset), 
-						.PC(PC), .Instr(Instr), .regin(Regin), .regout(Regout)); 
+						.PC(PC), .Instr(Instr), .RegIn(Regin), .RegOut(Regout)); 
 
 					
 /*	Multiciclo MULT1 (.clockCPU(ClockDIV), .clockMem(CLOCK), .reset(Reset), 
