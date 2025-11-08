@@ -12,12 +12,10 @@ module Uniciclo (
     
 initial
 begin
-      PC      <= 32'h0040_0000;
-      Instr   <= 32'b0;
-      RegOut  <= 32'b0;
+   PC      <= 32'h0040_0000;
+   Instr   <= 32'b0;
+   RegOut  <= 32'b0;
 end
-  
-wire [31:0] Leitura2, MemData;
 
 // fios da instrução
 wire [6:0] opcode = Instr[6:0];
@@ -45,8 +43,11 @@ wire [31:0] PC4, PCImm;
 wire Zero;
 wire [31:0] SaidaULA;
 
-// fios do banco de registradores
+// fios de leitura do banco de registradores
 wire [31:0] Dado1, Dado2;
+
+// fio de leitura da memória de dados
+wire [31:0] MemData;
 
 // registrador monitorado para verificar corretude
 wire [31:0] RegMonitorado;
@@ -94,7 +95,7 @@ ALU ULA (
 
 // Instanciação das memórias
 ramI MemC (.address(PC[11:2]), .clock(clockMem), .data(), .wren(1'b0), .q(Instr));
-ramD MemD (.address(SaidaULA[11:2]), .clock(clockMem), .data(Leitura2), .wren(EscreveMem), .q(MemData));
+ramD MemD (.address(SaidaULA[11:2]), .clock(clockMem), .data(Dados2), .wren(EscreveMem), .q(MemData));
 
 
 always @(posedge clockCPU  or posedge reset)
