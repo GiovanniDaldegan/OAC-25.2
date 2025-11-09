@@ -13,7 +13,7 @@ module ImmGen (
 always @ (*)
     case (iInstrucao[6:0])
         OPC_LOAD,
-	OPC_ADDI,
+        OPC_ADDI,
         OPC_OPIMM,
         OPC_JALR:
             oImm <= {{20{iInstrucao[31]}}, iInstrucao[31:20]};
@@ -23,8 +23,8 @@ always @ (*)
             oImm <= {{20{iInstrucao[31]}}, iInstrucao[7], iInstrucao[30:25], iInstrucao[11:8], 1'b0};
         OPC_JAL:
             oImm <= {{12{iInstrucao[31]}}, iInstrucao[19:12], iInstrucao[20], iInstrucao[30:21], 1'b0};
-	OPC_LUI:
-	    oImm <== {iInstrucao[31:12], 12{1'b0}};		
+        OPC_LUI:
+            oImm <= {iInstrucao[31:12], 12{1'b0}};		
         default:
             oImm <= ZERO;
     endcase
