@@ -23,7 +23,7 @@ always @ (*)
         OPC_JAL:
             oImm <= {{12{iInstrucao[31]}}, iInstrucao[19:12], iInstrucao[20], iInstrucao[30:21], 1'b0};
         OPC_LUI:
-            oImm <= {iInstrucao[31:12], 12{1'b0}};		
+            oImm <= {iInstrucao[31:12], {12{1'b0}}};		
         default:
             oImm <= ZERO;
     endcase
