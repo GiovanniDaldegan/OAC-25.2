@@ -2,3 +2,11 @@
 *.qmsg
 **/db/
 *.rpt
+*.qws
+*.bak
+*.smsg
+*.summary
+# **.map
+/LAB2/dev/incremental_db
+/LAB2/dev/output_files
+LAB2/dev/c5_pin_model_dump.txt

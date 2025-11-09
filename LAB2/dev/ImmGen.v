@@ -1,11 +1,11 @@
 `ifndef PARAM
-	`include "Parametros.v"
+    `include "Parametros.v"
 `endif
 
 /* Unidade de geração do imediato */
 
 module ImmGen (
-    input  		  [31:0] iInstrucao,
+    input        [31:0] iInstrucao,
     output logic [31:0] oImm
 );
 
@@ -13,7 +13,6 @@ module ImmGen (
 always @ (*)
     case (iInstrucao[6:0])
         OPC_LOAD,
-        OPC_ADDI,
         OPC_OPIMM,
         OPC_JALR:
             oImm <= {{20{iInstrucao[31]}}, iInstrucao[31:20]};
