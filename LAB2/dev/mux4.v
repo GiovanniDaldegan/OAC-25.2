@@ -2,27 +2,26 @@
 
 module mux4 (
    input  wire [31:0] entr0, entr1, entr2, entr3,
-   input  wire [1:0]  select,
-   output wire [31:0] out
+   input  wire [1:0]  sel,
+   output wire [31:0] saida
 );
 
 initial
 begin
-   select <= 2'd0;
-   out    <= 32'd0;
+   saida <= 32'd0;
 end
 
 always @(*)
 begin
-   case (select)
+   case (sel)
       2'b00:
-         out <= entr0;
+         saida <= entr0;
       2'b01:
-         out <= entr1;
+         saida <= entr1;
       2'b10:
-         out <= entr2;
+         saida <= entr2;
       2'b11:
-         out <= entr3;
+         saida <= entr3;
    endcase
 end
 
