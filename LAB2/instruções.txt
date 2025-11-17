@@ -1,0 +1,30 @@
+instruções obtidas na simulação funcional do processador uniciclo e o seu
+disassembly de acordo com o ISCTools
+<https://isc-tools.vercel.app/disassembler>
+
+(isso considerando exatamente o envio para o LAB2 pelo aprender3)
+
+resultado exatamente idêntico ao programa de1.s
+
+100101B7    #   lui gp, 0x10010
+00018193    #   addi gp, gp, 0
+0001A303    #   lw t1, 0(gp)
+77700393    #   addi t2, zero, 1911
+007372B3    #   and t0, t1, t2
+007362B3    #   or t0, t1, t2
+006382B3    #   add t0, t2, t1
+406382B3    #   sub t0, t2, t1
+007322B3    #   slt t0, t1, t2
+0063A2B3    #   slt t0, t2, t1
+00028663    #   beq t0, zero, 12
+EEE00293    #   addi t0, zero, -274
+00C0006F    #   jal zero, 12
+00C000EF    #   jal ra, 12
+CCC00293    #   addi t0, zero, -820
+0000006F    #   jal zero, 0
+07F00293    #   addi t0, zero, 127
+0051A223    #   sw t0, 4(gp)
+0001A283    #   lw t0, 0(gp)
+0041A283    #   lw t0, 4(gp)
+00008067    #   jalr zero, ra, 0
+00000000    #   Error: Opcode desconhecido (00000000)
