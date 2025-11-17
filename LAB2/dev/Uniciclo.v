@@ -49,17 +49,15 @@ wire [31:0] Dado1, Dado2;
 // fio de leitura da memória de dados
 wire [31:0] MemData;
 
-// registrador monitorado para verificar corretude
-wire [31:0] RegMonitorado;
 
 
 // módulos
 
-Registers bancoReg (
-   .iCLK(clockCPU), .iRST(reset), .iRegWrite(EscreveReg), .iReadRegister1(rs1),
-   .iReadRegister2(rs2), .iWriteData(DadoEscrita), .iWriteRegister(rd),
+BancoReg bancoReg (
+   .iCLK(clockCPU), .iRST(reset), .iRegWrite(EscreveReg), .iWriteRegister(rd),
+   .iReadRegister1(rs1), .iReadRegister2(rs2), .iWriteData(DadoEscrita),
    .oReadData1(Dado1), .oReadData2(Dado2),
-   .iRegDispSelect(RegIn), .oRegDisp(RegMonitorado)      // reg monitorado
+   .iRegDispSelect(RegIn), .oRegDisp(RegOut)      // reg monitorado
 );
 
 
