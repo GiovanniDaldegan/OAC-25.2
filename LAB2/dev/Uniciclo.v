@@ -26,8 +26,8 @@ wire [4:0] rs2    = Instr[24:20];
 wire [4:0] rd     = Instr[11:7];
 
 // fios de controle
-wire Mem2Reg, LeMem, EscreveMem, Branch, OrigULA, EscreveReg;
-wire [1:0] ALUop;
+wire LeMem, EscreveMem, OrigULA, EscreveReg;
+wire [1:0] ALUop, OrigReg, OrigPC;
 wire [3:0] codULA;
 
 // fio do gerador de imediatos
@@ -63,8 +63,8 @@ BancoReg bancoReg (
 
 // blocos de controle
 Controle controle (
-   .opcode(opcode), .Mem2Reg(Mem2Reg), .LeMem(LeMem), .EscreveMem(EscreveMem),
-   .Branch(Branch), .OrigULA(OrigULA), .EscreveReg(EscreveReg), .opULA(ALUop)
+   .opcode(opcode), .OrigReg(OrigReg), .LeMem(LeMem), .EscreveMem(EscreveMem),
+   .OrigULA(OrigULA), .EscreveReg(EscreveReg), .opULA(ALUop), .OrigPC(OrigPC)
 );
 
 ControleULA controleULA (
@@ -77,8 +77,8 @@ ImmGen GeraImm(.iInstrucao(Instr), .oImm(Imm));
 
 // multiplexadores
 mux4 muxOrigULA (.entr0(Dado2), .entr1(Imm), .sel(OrigULA), .saida(OperadorULA));
-mux4 muxEscrReg (.entr0(MemData), .entr1(SaidaULA), .sel(Mem2Reg), .saida(DadoEscrita));
-mux4 muxOrigPC  (.entr0(PC4), .entr1(PCImm), .sel(Branch & Zero), .saida(PCEscrita));
+mux4 muxEscrReg (.entr0(MemData), .entr1(SaidaULA), .entr2(PC4), .sel(OrigReg), .saida(DadoEscrita));
+mux4 muxOrigPC  (.entr0(PC4), .entr1(PCImm), .entr2(SaidaULA), .sel(OrigPC && {1'b0, Zero}), .saida(PCEscrita));
 
 
 // somadores
@@ -86,9 +86,7 @@ adder SomaPC4   (.iA(PC), .iB(32'd4), .out(PC4));
 adder SomaPCImm (.iA(PC), .iB(Imm), .out(PCImm));
 
 
-ALU ULA (
-   .iControl(codULA), .iA(Dado1), .iB(OperadorULA), .oResult(SaidaULA), .Zero(Zero)
-);
+ALU ULA (.iControl(codULA), .iA(Dado1), .iB(OperadorULA), .oResult(SaidaULA), .Zero(Zero));
 
 
 // Instanciação das memórias

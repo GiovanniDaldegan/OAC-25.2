@@ -18,11 +18,11 @@ always @(*)
 begin
    case (opULA)
       2'b00:
-         codULA <= OPADD;   // addi lui lw sw beq jal jalr
+         codULA <= OPADD;              // addi lui lw sw beq jal jalr
       2'b01:
-         codULA <= OPSUB;   // beq
+         codULA <= OPSUB;              // beq
       2'b10:
-         case (funct3)           // tipo-R: add sub slt or and
+         case (funct3)                 // tipo-R: add sub slt or and
             3'b000:
             begin
                if (funct7 == 7'b0)
