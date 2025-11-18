@@ -63,8 +63,9 @@ BancoReg bancoReg (
 
 // blocos de controle
 Controle controle (
-   .opcode(opcode), .OrigReg(OrigReg), .LeMem(LeMem), .EscreveMem(EscreveMem),
-   .OrigULA(OrigULA), .EscreveReg(EscreveReg), .opULA(ALUop), .OrigPC(OrigPC)
+   .opcode(opcode), .Zero(Zero), .OrigReg(OrigReg), .LeMem(LeMem),
+   .EscreveMem(EscreveMem), .OrigULA(OrigULA), .EscreveReg(EscreveReg),
+   .opULA(ALUop), .OrigPC(OrigPC)
 );
 
 ControleULA controleULA (
@@ -78,7 +79,7 @@ ImmGen GeraImm(.iInstrucao(Instr), .oImm(Imm));
 // multiplexadores
 mux4 muxOrigULA (.entr0(Dado2), .entr1(Imm), .sel(OrigULA), .saida(OperadorULA));
 mux4 muxEscrReg (.entr0(MemData), .entr1(SaidaULA), .entr2(PC4), .sel(OrigReg), .saida(DadoEscrita));
-mux4 muxOrigPC  (.entr0(PC4), .entr1(PCImm), .entr2(SaidaULA), .sel(OrigPC && {1'b0, Zero}), .saida(PCEscrita));
+mux4 muxOrigPC  (.entr0(PC4), .entr1(PCImm), .entr2(SaidaULA), .sel(OrigPC), .saida(PCEscrita));
 
 
 // somadores

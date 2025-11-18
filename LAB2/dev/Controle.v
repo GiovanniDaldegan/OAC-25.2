@@ -19,6 +19,7 @@
 
 module Controle (
    input  wire [6:0] opcode,
+   input  wire       Zero,
    output wire       EscreveReg, LeMem, EscreveMem, OrigULA,
    output wire [1:0] opULA, OrigReg, OrigPC
 );
@@ -77,7 +78,7 @@ begin
          //OrigReg     <= 2'b00;
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         OrigPC      <= 2'b01;         // PC = PC + imm
+         OrigPC      <= 2'b01 && {1'b0, Zero};  // PC = PC + imm
          OrigULA     <= 1'b0;
          opULA       <= 2'b01;
       end
