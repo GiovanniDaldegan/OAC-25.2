@@ -8,10 +8,10 @@
 */
 
 module ControleULA (
-   input  wire [1:0] opULA,
-   input  wire [2:0] funct3,
-   input  wire [6:0] funct7,
-   output wire [4:0] codULA
+   input  logic [1:0] opULA,
+   input  logic [2:0] funct3,
+   input  logic [6:0] funct7,
+   output logic [4:0] codULA
 );
 
 always @(*)
