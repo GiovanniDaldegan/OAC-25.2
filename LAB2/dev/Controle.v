@@ -19,8 +19,9 @@
 
 module Controle (
    input  wire [6:0] opcode,
-   output wire       Mem2Reg, LeMem, EscreveMem, Branch, OrigULA, EscreveReg,
-   output wire [1:0] opULA
+   input  wire       Zero,
+   output wire       EscreveReg, LeMem, EscreveMem, OrigULA,
+   output wire [1:0] opULA, OrigReg, OrigPC
 );
 
 
@@ -29,73 +30,73 @@ begin
    case (opcode)
       OPC_RTYPE:  begin       // 33 - add sub slt and or
          EscreveReg  <= 1'b1;
-         Mem2Reg     <= 1'b0;
+         OrigReg     <= 2'b00;
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         Branch      <= 1'b0;
+         OrigPC      <= 2'b00;
          OrigULA     <= 1'b0;
          opULA       <= 2'b10;
       end
       OPC_OPIMM:  begin       // 13 - addi
          EscreveReg  <= 1'b1;
-         Mem2Reg     <= 1'b0;
+         OrigReg     <= 2'b00;
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         Branch      <= 1'b0;
+         OrigPC      <= 2'b00;
          OrigULA     <= 1'b1;
          opULA       <= 2'b00;
       end
       OPC_LUI:    begin       // 37 - lui
          EscreveReg  <= 1'b1;
-         Mem2Reg     <= 1'b0;
+         OrigReg     <= 2'b00;         // rd = SaidaULA
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         Branch      <= 1'b0;
+         OrigPC      <= 2'b00;
          OrigULA     <= 1'b1;
          opULA       <= 2'b00;
       end
       OPC_LOAD:   begin       // 03 - lw
          EscreveReg  <= 1'b1;
-         Mem2Reg     <= 1'b1;
+         OrigReg     <= 2'b01;         // rd <- MEM
          LeMem       <= 1'b1;
          EscreveMem  <= 1'b0;
-         Branch      <= 1'b0;
+         OrigPC      <= 2'b00;
          OrigULA     <= 1'b1;
          opULA       <= 2'b00;
       end
       OPC_STORE:  begin       // 23 - sw
          EscreveReg  <= 1'b0;
-         Mem2Reg     <= 1'b0;
+         //OrigReg     <= 2'b00;
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b1;
-         Branch      <= 1'b0;
+         OrigPC      <= 2'b00;         // PC = PC + 4
          OrigULA     <= 1'b1;
          opULA       <= 2'b00;
       end
       OPC_BRANCH: begin       // 63 - beq
          EscreveReg  <= 1'b0;
-         Mem2Reg     <= 1'b0;
+         //OrigReg     <= 2'b00;
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         Branch      <= 1'b1;
+         OrigPC      <= 2'b01 && {1'b0, Zero};  // PC = PC + imm
          OrigULA     <= 1'b0;
          opULA       <= 2'b01;
       end
       OPC_JALR:   begin       // 67 - jalr
          EscreveReg  <= 1'b1;
-         Mem2Reg     <= 1'b0;
+         OrigReg     <= 2'b10;         // rd = PC + 4
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         Branch      <= 1'b0;
+         OrigPC      <= 2'b10;         // PC = SaidaULA (rs1 + imm)
          OrigULA     <= 1'b1;
          opULA       <= 2'b00;
       end
       OPC_JAL:    begin       // 6F - jal
          EscreveReg  <= 1'b1;
-         Mem2Reg     <= 1'b0;
+         OrigReg     <= 2'b10;         // rd = PC + 4
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         Branch      <= 1'b1;    // PC + {imm, 0}
+         OrigPC      <= 2'b01;         // PC = PC + imm
 //       OrigULA     <= 1'b;
 //       opULA       <= 2'b;
       end

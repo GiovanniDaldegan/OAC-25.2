@@ -3,11 +3,11 @@
 `endif
 
 module TopDE (
-	input logic CLOCK, Reset,
-	input logic [4:0] Regin,
-	output logic ClockDIV,
+	input  logic        CLOCK, Reset,
+	input  logic [4:0]  Regin,
+	output logic        ClockDIV,
 	output logic [31:0] PC,Instr,Regout,
-	output logic [3:0] Estado
+	output logic [3:0]  Estado
 	);
 	
 		

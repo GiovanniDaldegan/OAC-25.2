@@ -1,8 +1,8 @@
 `ifndef PARAM
  `define PARAM
 
-/* Operacoes da ULA */
 parameter
+   /* Operacoes da ULA */
     ZERO        = 32'd0,
     OPAND       = 5'd0,
     OPOR        = 5'd1,
