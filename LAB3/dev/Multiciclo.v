@@ -3,57 +3,78 @@
 `endif
 
 module Multiciclo (
-	input logic clockCPU, clockMem,
-	input logic reset,
-	output logic [31:0] PC,
-	output logic [31:0] Instr,
-	input  logic [4:0] regin,
-	output logic [31:0] regout,
-	output logic [3:0] estado
-	);
-	
-	reg [31:0] PCBack;
-	
-	initial
-		begin
-			PC<=32'h0040_0000;
-			PCBack<=32'h0040_0000;
-			Instr<=32'b0;
-			regout<=32'b0;
-		end
-		
-		wire [31:0] SaidaULA, Leitura2,B;
-		wire EscreveMem;
-		
-		wire [3:0] proximo;
-		
-//******************************************
-// Aqui vai o seu código do seu processador
+   input  logic        clockCPU, clockMem, reset,
+   output logic [31:0] PC, Instr,
+   output logic [ 3:0] estado
+   
+   // registrador monitorado
+   input  logic [ 4:0] regin,
+   output logic [31:0] regout
+);
 
-always @(posedge clockCPU or posedge reset)
-	if(reset)
-		begin
-			PC <= 32'h0040_0000;
-			PCBack <= 32'h0040_0000;
-			estado <= 4'b0000;
-		end
-	else
-			estado <= proximo;
+// registradores
+reg [31:0] PCBack, A, B, SaidaULA, RegInstr, RegDado;
 
-		
-wire [31:0] wIouD, MemData, rmem;
-		
-		
-assign EscreveMem = 1'b0;
- 
+// fios da instrução
+wire [6:0] opcode = Instr[ 6: 0];
+wire [2:0] funct3 = Instr[14:12];
+wire [6:0] funct7 = Instr[31:25];
+wire [4:0] rs1    = Instr[19:15];
+wire [4:0] rs2    = Instr[24:20];
+wire [4:0] rd     = Instr[11: 7];
 
-ramI MemC (.address(wIouD[11:2]), .clock(clockMem), .data(B), .wren(EscreveMem & ~wIouD[28]), .q(Instr));
-ramD MemD (.address(wIouD[11:2]), .clock(clockMem), .data(B), .wren(EscreveMem & wIouD[28]), .q(MemData));
+// fios de controle
+wire IouD, EscrevePC, EscrevePCCond, EscrevePCB, LeMem, EscreveMem, EscreveIR, EscreveReg;
+wire [1:0] OrigRd, OrigPC, ALUOp, OrigAULA, OrigBULA;
+wire [3:0] codULA;
 
-assign rmem = wIouD[28]? MemData : Instr;
+// fios dos multiplexadores
+wire [31:0] DadoEscrita, PCEscrita, OperadorULA;
 
-	
-//*****************************************
-	
-			
+// fio do gerador de imediatos
+wire [31:0] Imm;
+
+// fios da ULA
+wire Zero;
+wire [31:0] ResULA;
+
+// fios de leitura do banco de registradores
+wire [31:0] Dado1, Dado2;
+
+// fio de leitura da memória de dados
+
+
+wire [31:0] Leitura2;
+wire EscreveMem;
+
+wire [3:0] proximo;
+
+
+initial begin
+   PC     <= TEXT_ADDRESS;
+   PCBack <= TEXT_ADDRESS;
+   Instr  <= 32'b0;
+   regout <= 32'b0;
+   estado <= 4'b0;
+end
+
+always @(posedge clockCPU or posedge reset) begin
+   if(reset) begin
+      PC     <= TEXT_ADDRESS;
+      PCBack <= TEXT_ADDRESS;
+      estado <= 4'b0000;
+   end
+   else
+      estado <= proximo;
+end
+
+
+wire [31:0] Endereco, MemData, rmem;
+
+
+ramI MemC (.address(Endereco[11:2]), .clock(clockMem), .data(B), .wren(EscreveMem & ~Endereco[28]), .q(Instr));
+ramD MemD (.address(Endereco[11:2]), .clock(clockMem), .data(B), .wren(EscreveMem & Endereco[28]), .q(MemData));
+
+assign rmem = Endereco[28] ? MemData : Instr;
+
 endmodule
