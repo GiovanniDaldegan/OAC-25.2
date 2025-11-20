@@ -1,5 +1,5 @@
 `ifndef PARAM
-	`include "Parametros.v"
+   `include "Parametros.v"
 `endif
 
 module Multiciclo (
