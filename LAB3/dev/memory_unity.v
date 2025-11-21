@@ -1,0 +1,82 @@
+// -----------------------------------------------------------
+//  Módulo de Memória Unificada para o Multiciclo (Lab 3 - OAC)
+//  Usa duas memórias físicas (instruction_ram e data_ram)
+//  mas exporta UMA interface de memória (Von Neumann).
+//
+//  Endereçamento:
+//
+//  Instruction RAM : 0x0000_0000 → 0x0000_FFFF   (64 KB)
+//  Data RAM        : 0x0001_0000 → 0x0002_FFFF   (128 KB)
+//  instruction_ram  : DEPTH = 16384 palavras (2^14)
+//  data_ram         : DEPTH = 32768 palavras (2^15)
+//
+//  Ajuste os limites conforme o DEPTH dos seus IPs.
+// -----------------------------------------------------------
+
+module memory_unit (
+    input         clk,
+    input         memRead,        // Leitura de memória
+    input         memWrite,       // Escrita de memória
+    input  [31:0] addr,           // Endereço vindo do datapath
+    input  [31:0] write_data,     // Dado a ser escrito na memória
+    output [31:0] read_data       // Dado lido da memória
+);
+
+    // --------------------------------------------------------------------
+    // Definição da faixa de endereços
+    // Ajuste se a sua instruction_ram for maior ou menor.
+    // Aqui: primeiro bloco de 4 KB (0x0000 a 0x0FFF) vira Instruções.
+    // --------------------------------------------------------------------
+    localparam INSTR_ADDR_LIMIT = 32'h0000FFFF;
+	
+    wire select_instruction = (addr <= INSTR_ADDR_LIMIT);
+    wire select_data        = !select_instruction;
+
+    // --------------------------------------------------------------------
+    // Sinais internos para receber dados das duas memórias
+    // --------------------------------------------------------------------
+    wire [13:0] inst_addr = addr[15:2];
+    wire [14:0] data_addr = addr[16:2];
+
+    wire [31:0] inst_q;
+    wire [31:0] data_q;
+
+    // --------------------------------------------------------------------
+    // A RAM do Quartus usa endereços baseados em PALAVRAS, não bytes.
+    // Ou seja: addr[31:2] remove os dois bits menos significativos.
+    // --------------------------------------------------------------------	 
+    // Ajuste os bits conforme a profundidade do  IP
+    // -------------------------	-------------------------------------------
+    // Instância da Instruction RAM (somente leitura)
+    // memWrite = nunca, pois não se escreve em instruções.
+    // --------------------------------------------------------------------
+    instruction_ram instr_mem (
+        .clock  (clk),
+        .address(word_addr),
+        .data   (write_data),       // Não escreve instrução
+        .wren   (memWrite & select_instruction),
+        .q      (inst_q)
+    );
+
+    // --------------------------------------------------------------------
+    // Instância da Data RAM (read/write)
+    // --------------------------------------------------------------------
+    data_ram data_mem (
+        .clock  (clk),
+        .address(word_addr),
+        .data   (write_data),
+        .wren   (memWrite & select_data),
+        .q      (data_q)
+    );
+
+    // --------------------------------------------------------------------
+    // Multiplexador final de saída
+    // Se o endereço for área de instrução -> inst_q
+    // Caso contrário -> data_q
+    // --------------------------------------------------------------------
+    assign read_data =
+          (memRead && select_instruction) ? inst_q  :
+          (memRead && select_data)        ? data_q  :
+          32'b0;
+
+endmodule
