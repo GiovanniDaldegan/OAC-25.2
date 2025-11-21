@@ -23,7 +23,7 @@ Uniciclo UNI1 (.clockCPU(ClockDIV), .clockMem(CLOCK), .reset(Reset),
 */
 
 Multiciclo MULT1 (.clockCPU(CLOCK), .clockMem(CLOCK), .reset(Reset), .PC(PC),
-                  .Instr(Instr), .estado(Estado) .regin(Regin), .regout(Regout);
+                  .Instr(Instr), .estado(Estado), .regin(Regin), .regout(Regout));
 
 /*
 Pipeline PIP1 (.clockCPU(ClockDIV), .clockMem(CLOCK), .reset(Reset),
