@@ -14,17 +14,133 @@
  */
 
 `ifndef PARAM
-    `include "Parametros.v"
+   `include "Parametros.v"
 `endif
 
 module Controle (
    input  wire [6:0] opcode,
    input  wire       Zero,
    output wire       EscreveReg, LeMem, EscreveMem, OrigULA,
-   output wire [1:0] opULA, OrigReg, OrigPC
+   output wire [1:0] opULA, OrigReg, OrigPC,
+   output reg  [4:0] estado
 );
 
+// ---------------------------
+// Definição dos estados
+// ---------------------------
+localparam  IF1         = 6'd0,
+            IF2         = 6'd1,
+            ID          = 6'd2,
 
+            R_EX        = 6'd3,
+            I_EX        = 6'd4,
+               ULA_WB   = 6'd9,
+            
+            MEM_EX      = 6'd5,
+               SW_MEM1  = 6'd10,
+               SW_MEM2  = 6'd11,
+               
+               LW_MEM2  = 6'd12,
+               LW_MEM2  = 6'd13,
+               LW_WB    = 6'd14,
+            
+            BEQ_EX      = 6'd6,
+            JAL_EX      = 6'd7,
+            JALR_EX     = 6'd8;
+
+
+reg [4:0] prox_estado;
+
+always @(posedge CLK) begin
+   case(estado)
+      IF1: begin
+         //sinais
+         prox_estado = IF2;
+      end
+      IF2: begin 
+         //sinais
+         prox_estado = ID;
+      end
+      
+      ID: begin
+         // sinais
+         case(opcode)
+            OPC_R:    prox_estado = R_EX;
+            OPC_ADDI,
+            OPC_LUI:  prox_estado = I_EX;
+            OPC_LW,
+            OPC_SW:   prox_estado = MEM_EX;
+            OPC_BEQ:  prox_estado = BEQ_EX;
+            OPC_JAL:  prox_estado = JAL_EX;
+            OPC_JALR: prox_estado = JALR_EX; 
+            default:  prox_estado = IF1;       // mandar pra PC + 4?
+         endcase
+      end
+      
+      R_EX: begin
+         //sinais
+         prox_estado = ULA_WB;
+      end
+      
+      I_EX: begin
+         //sinais
+         prox_estado = ULA_WB;
+      end
+      
+      MEM_EX: begin
+         //sinais
+         prox_estado = MEM1;
+      end
+      
+      BEQ_EX: begin
+         //sinais
+         prox_estado = IF1;
+      end
+      
+      JAL_EX: begin
+         //sinais
+         prox_estado = IF1;
+      end
+      
+      JALR_EX: begin
+         //sinais
+         prox_estado = IF1;
+      end
+      
+      ULA_WB: begin
+         //sinais
+         prox_estado = IF1;
+      end
+      
+      SW_MEM1: begin
+         //sinais
+         prox_estado = MEM2;
+      end
+      
+      SW_MEM2: begin
+         //sinais
+         prox_estado = LW_WB;
+      end
+      
+      LW_MEM1: begin
+         //sinais
+         prox_estado = MEM2;
+      end
+      
+      LW_MEM2: begin
+         //sinais
+         prox_estado = LW_WB;
+      end
+      
+      LW_WB: begin
+         //sinais
+         prox_estado = IF1;
+      end
+      
+   endcase
+end
+
+/*
 always @(*)
 begin
    case (opcode)
@@ -102,6 +218,6 @@ begin
       end
    endcase
 end
-
+*/
 
 endmodule

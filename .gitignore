@@ -1,16 +1,20 @@
-*.qmsg
+# diretórios
 **/db/
+**/incremental_db
+**/output_files
+**/simulation
+**/greybox_tmp
+
+# extensões
+*.qmsg
 *.rpt
 *.qws
 *.bak
 *.smsg
 *.summary
 # **.map
-/LAB2/dev/incremental_db
-/LAB2/dev/output_files
-LAB2/dev/c5_pin_model_dump.txt
-/LAB2/dev/simulation/qsim
-/LAB2/dev/simulation
-/LAB2/dev/greybox_tmp
 *_bb.v
 *_bb.qip
+
+#arquivos
+c5_pin_model_dump.txt

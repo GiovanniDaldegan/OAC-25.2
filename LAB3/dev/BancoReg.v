@@ -3,12 +3,14 @@
 `endif
 
 module BancoReg (
-    input  logic         iCLK, iRST, iRegWrite,
-    input  logic [4:0]   iReadRegister1, iReadRegister2, iWriteRegister,
-    input  logic [31:0]  iWriteData,
-    input  logic [4:0]   iRegDispSelect,     // índice do registrador monitorado
-    output logic [31:0]  oReadData1, oReadData2,
-    output logic [31:0]  oRegDisp            // output do registrador monitorado
+   input  logic         iCLK, iRST, iRegWrite,
+   input  logic [4:0]   iReadRegister1, iReadRegister2, iWriteRegister,
+   input  logic [31:0]  iWriteData,
+   output logic [31:0]  oReadData1, oReadData2,
+   
+   // registrador monitorado
+   input  logic [4:0]   iRegDispSelect,
+   output logic [31:0]  oRegDisp
 );
 
 reg [31:0] registers [31:0];
@@ -24,6 +26,7 @@ initial begin
    registers[SPR] <= STACK_ADDRESS;
 end
 
+
 assign oRegDisp   = registers[iRegDispSelect];
 assign oReadData1 = registers[iReadRegister1];
 assign oReadData2 = registers[iReadRegister2];
@@ -37,10 +40,6 @@ begin
       registers[SPR] = STACK_ADDRESS;
    end
    else begin
-//      oRegDisp   = registers[iRegDispSelect];
-//      oReadData1 = registers[iReadRegister1];
-//      oReadData2 = registers[iReadRegister2];
-      
       if(iRegWrite && (iWriteRegister != 5'b0))
          registers[iWriteRegister] <= iWriteData;
       
