@@ -19,7 +19,7 @@
 
 module ControleMulti (
    input  wire [6:0] opcode,
-   input  wire       CLK, Zero,
+   input  wire       CLK, RST, Zero,
    output wire       EscrevePC, EscrevePCCond, EscrevePCB, IouD, EscreveIR,
                      LeMem, EscreveMem, EscreveReg,
    output wire [1:0] OrigPC, OrigRd, OrigAULA, OrigBULA, opULA,
@@ -47,12 +47,19 @@ localparam  IF1         = 6'd0,
             
             BEQ_EX      = 6'd6,
             JAL_EX      = 6'd7,
-            JALR_EX     = 6'd8;
+            
+            JALR_WB     = 6'd8,
+               JALR_EX  = 6'd15;
 
 
-reg [4:0] prox_estado;
+reg [4:0] prox_estado = 5'b0;
 
-always @(posedge CLK) begin
+always @(posedge CLK or posedge RST) begin
+   if (RST)
+      estado   <= 5'b0;
+   else
+      estado   <= prox_estado;
+   
    case(estado)
       IF1: begin
          EscrevePC      <= 1'b1;    // atualiza PC
@@ -70,7 +77,7 @@ always @(posedge CLK) begin
          OrigBULA       <= 2'b01;   // B ULA: 4
          opULA          <= 2'b00;   // PC+4
          
-         prox_estado = IF2;
+         prox_estado    <= IF2;
       end
       IF2: begin
          /*
@@ -118,7 +125,7 @@ always @(posedge CLK) begin
             OPC_STORE:  prox_estado <= MEM_EX;
             OPC_BRANCH: prox_estado <= BEQ_EX;
             OPC_JAL:    prox_estado <= JAL_EX;
-            OPC_JALR:   prox_estado <= JALR_EX; 
+            OPC_JALR:   prox_estado <= JALR_WB;
             default:    prox_estado <= IF1;       // mandar pra PC + 4?
          endcase
       end
@@ -141,7 +148,7 @@ always @(posedge CLK) begin
          OrigBULA       <= 2'b00;   // B
          opULA          <= 2'b10;   // A op B
          
-         prox_estado = ULA_WB;
+         prox_estado    <= ULA_WB;
       end
       
       I_EX: begin
@@ -162,7 +169,7 @@ always @(posedge CLK) begin
          OrigBULA       <= 2'b10;   // imm
          opULA          <= 2'b00;   // A + imm
          
-         prox_estado = ULA_WB;
+         prox_estado    <= ULA_WB;
       end
       
       ULA_WB: begin
@@ -183,7 +190,7 @@ always @(posedge CLK) begin
          opULA          <= 2'b;
          */
          
-         prox_estado = IF1;
+         prox_estado    <= IF1;
       end
       
       MEM_EX: begin
@@ -228,7 +235,7 @@ always @(posedge CLK) begin
          opULA          <= 2'b;
          */
          
-         prox_estado = SW_MEM2;
+         prox_estado    <= SW_MEM2;
       end
       
       SW_MEM2: begin
@@ -248,7 +255,7 @@ always @(posedge CLK) begin
          opULA          <= 2'b;
          */
          
-         prox_estado = IF1;
+         prox_estado    <= IF1;
       end
       
       LW_MEM1: begin
@@ -269,7 +276,7 @@ always @(posedge CLK) begin
          opULA          <= 2'b;
          */
          
-         prox_estado = LW_MEM2;
+         prox_estado    <= LW_MEM2;
       end
       
       LW_MEM2: begin
@@ -290,7 +297,7 @@ always @(posedge CLK) begin
          opULA          <= 2'b;
          */
          
-         prox_estado = LW_WB;
+         prox_estado    <= LW_WB;
       end
       
       LW_WB: begin
@@ -311,7 +318,7 @@ always @(posedge CLK) begin
          opULA          <= 2'b;
          */
          
-         prox_estado = IF1;
+         prox_estado    <= IF1;
       end
       
       BEQ_EX: begin
@@ -332,7 +339,7 @@ always @(posedge CLK) begin
          opULA          <= 2'b;
          */
          
-         prox_estado = IF1;
+         prox_estado    <= IF1;
       end
       
       JAL_EX: begin
@@ -353,26 +360,46 @@ always @(posedge CLK) begin
          opULA          <= 2'b;
          */
          
-         prox_estado = IF1;
+         prox_estado   <= IF1;
+      end
+      
+      JALR_WB: begin
+         EscrevePC      <= 1'b0;
+         EscrevePCCond  <= 1'b0;
+         EscrevePCB     <= 1'b0;
+         //IouD           <= 1'b;
+         EscreveIR      <= 1'b0;
+         LeMem          <= 1'b0;
+         EscreveMem     <= 1'b0;
+         EscreveReg     <= 1'b1;
+         
+         //OrigPC         <= 2'b;
+         OrigRd         <= 2'b00;   // [rd]     <= PC+4
+         OrigAULA       <= 2'b01;   // SaidaULA <= rs1+imm
+         OrigBULA       <= 2'b10;
+         opULA          <= 2'b00;
+         
+         prox_estado    <= JALR_EX;
       end
       
       JALR_EX: begin
-         EscrevePC      <= 1'b;
-         EscrevePCCond  <= 1'b;
-         EscrevePCB     <= 1'b;
-         IouD           <= 1'b;
-         EscreveIR      <= 1'b;
-         LeMem          <= 1'b;
-         EscreveMem     <= 1'b;
-         EscreveReg     <= 1'b;
+         EscrevePC      <= 1'b1;
+         EscrevePCCond  <= 1'b0;
+         EscrevePCB     <= 1'b0;
+         //IouD           <= 1'b;
+         EscreveIR      <= 1'b0;
+         LeMem          <= 1'b0;
+         EscreveMem     <= 1'b0;
+         EscreveReg     <= 1'b0;
          
-         OrigPC         <= 2'b;
+         OrigPC         <= 2'b00;   // PC <= SaidaULA (rs1+imm)
+         /*
          OrigRd         <= 2'b;
          OrigAULA       <= 2'b;
          OrigBULA       <= 2'b;
          opULA          <= 2'b;
-         
-         prox_estado = IF1;
+         */
+         prox_estado    <= IF1;
       end
       
    endcase
