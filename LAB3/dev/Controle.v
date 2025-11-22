@@ -19,7 +19,7 @@
 
 module Controle (
    input  wire [6:0] opcode,
-   input  wire       Zero,
+   input  wire       CLK, Zero,
    output wire       EscreveReg, LeMem, EscreveMem, OrigULA,
    output wire [1:0] opULA, OrigReg, OrigPC,
    output reg  [4:0] estado
@@ -40,7 +40,7 @@ localparam  IF1         = 6'd0,
                SW_MEM1  = 6'd10,
                SW_MEM2  = 6'd11,
                
-               LW_MEM2  = 6'd12,
+               LW_MEM1  = 6'd12,
                LW_MEM2  = 6'd13,
                LW_WB    = 6'd14,
             
@@ -65,15 +65,15 @@ always @(posedge CLK) begin
       ID: begin
          // sinais
          case(opcode)
-            OPC_R:    prox_estado = R_EX;
-            OPC_ADDI,
-            OPC_LUI:  prox_estado = I_EX;
-            OPC_LW,
-            OPC_SW:   prox_estado = MEM_EX;
-            OPC_BEQ:  prox_estado = BEQ_EX;
-            OPC_JAL:  prox_estado = JAL_EX;
-            OPC_JALR: prox_estado = JALR_EX; 
-            default:  prox_estado = IF1;       // mandar pra PC + 4?
+            OPC_RTYPE:  prox_estado <= R_EX;
+            OPC_OPIMM,
+            OPC_LUI:    prox_estado <= I_EX;
+            OPC_LOAD,
+            OPC_STORE:  prox_estado <= MEM_EX;
+            OPC_BRANCH: prox_estado <= BEQ_EX;
+            OPC_JAL:    prox_estado <= JAL_EX;
+            OPC_JALR:   prox_estado <= JALR_EX; 
+            default:    prox_estado <= IF1;       // mandar pra PC + 4?
          endcase
       end
       
@@ -87,9 +87,43 @@ always @(posedge CLK) begin
          prox_estado = ULA_WB;
       end
       
+      ULA_WB: begin
+         //sinais
+         prox_estado = IF1;
+      end
+      
       MEM_EX: begin
          //sinais
-         prox_estado = MEM1;
+         
+         case (opcode)
+            OPC_STORE: prox_estado <= SW_MEM1;
+            OPC_LOAD:  prox_estado <= LW_MEM1;
+         endcase
+      end
+      
+      SW_MEM1: begin
+         //sinais
+         prox_estado = SW_MEM2;
+      end
+      
+      SW_MEM2: begin
+         //sinais
+         prox_estado = IF1;
+      end
+      
+      LW_MEM1: begin
+         //sinais
+         prox_estado = LW_MEM2;
+      end
+      
+      LW_MEM2: begin
+         //sinais
+         prox_estado = LW_WB;
+      end
+      
+      LW_WB: begin
+         //sinais
+         prox_estado = IF1;
       end
       
       BEQ_EX: begin
@@ -103,36 +137,6 @@ always @(posedge CLK) begin
       end
       
       JALR_EX: begin
-         //sinais
-         prox_estado = IF1;
-      end
-      
-      ULA_WB: begin
-         //sinais
-         prox_estado = IF1;
-      end
-      
-      SW_MEM1: begin
-         //sinais
-         prox_estado = MEM2;
-      end
-      
-      SW_MEM2: begin
-         //sinais
-         prox_estado = LW_WB;
-      end
-      
-      LW_MEM1: begin
-         //sinais
-         prox_estado = MEM2;
-      end
-      
-      LW_MEM2: begin
-         //sinais
-         prox_estado = LW_WB;
-      end
-      
-      LW_WB: begin
          //sinais
          prox_estado = IF1;
       end
