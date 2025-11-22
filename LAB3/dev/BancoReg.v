@@ -31,8 +31,8 @@ assign oRegDisp   = registers[iRegDispSelect];
 assign oReadData1 = registers[iReadRegister1];
 assign oReadData2 = registers[iReadRegister2];
 
-always @(posedge iCLK or posedge iRST)
-begin
+
+always @(negedge iCLK or posedge iRST) begin
    if (iRST) begin
       for (i = 0; i <= 31; i = i + 32'b1)
          registers[i] = 32'b0;

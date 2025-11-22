@@ -13,8 +13,6 @@
 *.smsg
 *.summary
 # **.map
-*_bb.v
-*_bb.qip
 
 #arquivos
 c5_pin_model_dump.txt
