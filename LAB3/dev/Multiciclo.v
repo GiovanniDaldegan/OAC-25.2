@@ -49,16 +49,19 @@ wire [31:0] ResULA, AULA, BULA;
 wire [31:0] Dado1, Dado2;
 
 // fios da memória
-wire [31:0] Endereco, Mem;
+wire [31:0] Endereco, MemLeitura;
 
 
 // módulos
 
-mux4 muxOrigPC    (.enable(clockCPU), .entr0(ResULA),   .entr1(SaidaULA),              .sel(OrigPC),   .saida(PC));
-mux4 muxOrigEnder (.enable(clockCPU), .entr0(PC),       .entr1(SaidaULA),              .sel(IouD),     .saida(Endereco));
-mux4 muxOrigRd    (.enable(clockCPU), .entr0(SaidaULA), .entr1(PC),       .entr2(Mem), .sel(OrigRd),   .saida(DadoEscrita));
-mux4 muxOrigA     (.enable(clockCPU), .entr0(PCBack),   .entr1(A),        .entr2(PC),  .sel(OrigAULA), .saida(AULA));
-mux4 muxOrigB     (.enable(clockCPU), .entr0(B),        .entr1(32'd4),    .entr2(Imm), .sel(OrigBULA), .saida(BULA));
+mux4sync muxOrigPC(
+   .clock(clockCPU), .enable((EscrevePCCond && Zero) || EscrevePC),
+   .sel(OrigPC), .entr0(ResULA), .entr1(SaidaULA), .saida(PC)
+);
+mux4 muxOrigEnder (.enable(1), .entr0(PC),       .entr1(SaidaULA),                  .sel(IouD),     .saida(Endereco));
+mux4 muxOrigRd    (.enable(1), .entr0(SaidaULA), .entr1(PC),       .entr2(RegDado), .sel(OrigRd),   .saida(DadoEscrita));
+mux4 muxOrigA     (.enable(1), .entr0(PCBack),   .entr1(A),        .entr2(PC),      .sel(OrigAULA), .saida(AULA));
+mux4 muxOrigB     (.enable(1), .entr0(B),        .entr1(32'd4),    .entr2(Imm),     .sel(OrigBULA), .saida(BULA));
 
 
 // ControleMulti Controle ();
@@ -92,7 +95,9 @@ always @(posedge clockCPU or posedge reset) begin
       estado <= 4'b0000;
    end
    else
-      estado <= ProxEstado;
+      if (EscrevePCB) PCBack   <= PC;
+      if (EscreveIR)  RegInstr <= MemLeitura;
+                      RegDado  <= MemLeitura;
       
 end
 
