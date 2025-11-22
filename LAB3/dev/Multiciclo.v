@@ -54,11 +54,11 @@ wire [31:0] Endereco, Mem;
 
 // módulos
 
-mux4 muxOrigPC    (.enable(), .entr0(ResULA),   .entr1(SaidaULA),              .sel(OrigPC),   .saida(PC));
-mux4 muxOrigEnder (.enable(), .entr0(PC),       .entr1(SaidaULA),              .sel(IouD),     .saida(Endereco));
-mux4 muxOrigRd    (.enable(), .entr0(SaidaULA), .entr1(PC),       .entr2(Mem), .sel(OrigRd),   .saida(DadoEscrita));
-mux4 muxOrigA     (.enable(), .entr0(PCBack),   .entr1(A),        .entr2(PC),  .sel(OrigAULA), .saida(AULA));
-mux4 muxOrigB     (.enable(), .entr0(B),        .entr1(32'd4),    .entr2(Imm), .sel(OrigBULA), .saida(BULA));
+mux4 muxOrigPC    (.enable(clockCPU), .entr0(ResULA),   .entr1(SaidaULA),              .sel(OrigPC),   .saida(PC));
+mux4 muxOrigEnder (.enable(clockCPU), .entr0(PC),       .entr1(SaidaULA),              .sel(IouD),     .saida(Endereco));
+mux4 muxOrigRd    (.enable(clockCPU), .entr0(SaidaULA), .entr1(PC),       .entr2(Mem), .sel(OrigRd),   .saida(DadoEscrita));
+mux4 muxOrigA     (.enable(clockCPU), .entr0(PCBack),   .entr1(A),        .entr2(PC),  .sel(OrigAULA), .saida(AULA));
+mux4 muxOrigB     (.enable(clockCPU), .entr0(B),        .entr1(32'd4),    .entr2(Imm), .sel(OrigBULA), .saida(BULA));
 
 
 // ControleMulti Controle ();
