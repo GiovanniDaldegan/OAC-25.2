@@ -8,7 +8,7 @@
 `endif
 
  
-module ALU (
+module ULA (
     input        [4:0]  iControl,
     input signed [31:0] iA, iB,
     output logic [31:0] oResult,
