@@ -1,5 +1,5 @@
 /* 
- * Bloco de controle (combinacional) do processador uniciclo da ISA RV32I
+ * Máquina de estados de controle do processador multiciclo da ISA RV32I
  * reduzida
  *
  * instruções (tipo, opcode e nomes):
@@ -17,10 +17,10 @@
    `include "Parametros.v"
 `endif
 
-module Controle (
+module ControleMulti (
    input  wire [6:0] opcode,
    input  wire       CLK, Zero,
-   output wire       EscrevePC, EscrevePCCond, EscrevePCB, IouD, EscreveIR
+   output wire       EscrevePC, EscrevePCCond, EscrevePCB, IouD, EscreveIR,
                      LeMem, EscreveMem, EscreveReg,
    output wire [1:0] OrigPC, OrigRd, OrigAULA, OrigBULA, opULA,
    output reg  [4:0] estado
@@ -160,7 +160,7 @@ always @(posedge CLK) begin
          */
          OrigAULA       <= 2'b01;   // A
          OrigBULA       <= 2'b10;   // imm
-         opULA          <= 2'b00;     // A + imm
+         opULA          <= 2'b00;   // A + imm
          
          prox_estado = ULA_WB;
       end
@@ -202,7 +202,7 @@ always @(posedge CLK) begin
          */
          OrigAULA       <= 2'b01;   // rs1
          OrigBULA       <= 2'b10;   // imm
-         opULA          <= 2'b00;   // [rs1] + imm
+         opULA          <= 2'b00;   // SaidaULA <= [rs1] + imm
          
          case (opcode)
             OPC_STORE: prox_estado <= SW_MEM1;
@@ -324,30 +324,34 @@ always @(posedge CLK) begin
          EscreveMem     <= 1'b0;
          EscreveReg     <= 1'b0;
          
-         OrigPC         <= 2'b;
+         OrigPC         <= 2'b01;
+         /*
          OrigRd         <= 2'b;
          OrigAULA       <= 2'b;
          OrigBULA       <= 2'b;
          opULA          <= 2'b;
+         */
          
          prox_estado = IF1;
       end
       
       JAL_EX: begin
-         EscrevePC      <= 1'b;
-         EscrevePCCond  <= 1'b;
-         EscrevePCB     <= 1'b;
-         IouD           <= 1'b;
-         EscreveIR      <= 1'b;
-         LeMem          <= 1'b;
-         EscreveMem     <= 1'b;
-         EscreveReg     <= 1'b;
+         EscrevePC      <= 1'b1;
+         EscrevePCCond  <= 1'b0;
+         EscrevePCB     <= 1'b0;
+         //IouD           <= 1'b;
+         EscreveIR      <= 1'b0;
+         LeMem          <= 1'b0;
+         EscreveMem     <= 1'b0;
+         EscreveReg     <= 1'b1;
          
-         OrigPC         <= 2'b;
-         OrigRd         <= 2'b;
+         OrigPC         <= 2'b00;
+         OrigRd         <= 2'b00;
+         /*
          OrigAULA       <= 2'b;
          OrigBULA       <= 2'b;
          opULA          <= 2'b;
+         */
          
          prox_estado = IF1;
       end
