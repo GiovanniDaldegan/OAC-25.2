@@ -1,12 +1,12 @@
 /*<simulation_settings>
-<ftestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off LAB3_Multiciclo -c TopDE --vector_source="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/Waveform.vwf" --testbench_file="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/simulation/qsim/Waveform.vwf.vt"</ftestbench_cmd>
-<ttestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off LAB3_Multiciclo -c TopDE --vector_source="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/Waveform.vwf" --testbench_file="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/simulation/qsim/Waveform.vwf.vt"</ttestbench_cmd>
+<ftestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off LAB3_Multiciclo -c TopDE --vector_source="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/controle.vwf" --testbench_file="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/simulation/qsim/controle.vwf.vt"</ftestbench_cmd>
+<ttestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off LAB3_Multiciclo -c TopDE --vector_source="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/controle.vwf" --testbench_file="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/simulation/qsim/controle.vwf.vt"</ttestbench_cmd>
 <fnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=on --flatten_buses=off --tool=modelsim_oem --format=verilog --output_directory="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/simulation/qsim/" LAB3_Multiciclo -c TopDE</fnetlist_cmd>
 <tnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=off --flatten_buses=off --timescale=1ps --tool=modelsim_oem --format=verilog --output_directory="C:/Users/giova/dev/github/OAC-25.2/LAB3/dev/simulation/qsim/" LAB3_Multiciclo -c TopDE</tnetlist_cmd>
 <modelsim_script>onerror {exit -code 1}
 vlib work
 vlog -work work TopDE.vo
-vlog -work work Waveform.vwf.vt
+vlog -work work controle.vwf.vt
 vsim -voptargs="+acc" -c -t 1ps -L cyclonev_ver -L altera_ver -L altera_mf_ver -L 220model_ver -L sgate_ver -L altera_lnsim_ver work.Controle_vlg_vec_tst
 vcd file -direction LAB3_Multiciclo.msim.vcd
 vcd add -internal Controle_vlg_vec_tst/*
@@ -27,7 +27,7 @@ quit -f
 <modelsim_script_timing>onerror {exit -code 1}
 vlib work
 vlog -work work TopDE.vo
-vlog -work work Waveform.vwf.vt
+vlog -work work controle.vwf.vt
 vsim -voptargs="+acc" -c -t 1ps -L cyclonev_ver -L altera_ver -L altera_mf_ver -L 220model_ver -L sgate_ver -L altera_lnsim_ver work.Controle_vlg_vec_tst
 vcd file -direction LAB3_Multiciclo.msim.vcd
 vcd add -internal Controle_vlg_vec_tst/*
