@@ -13,14 +13,11 @@ module Multiciclo (
 );
 
 
-
 // registradores
-reg [31:0] PCBack, A, B, SaidaULA, RegInstr, RegDado;
+reg [31:0] PCBack, A, B, SaidaULA, RegDado;
 
 
 // fios
-
-wire [3:0] ProxEstado;
 
 // fios da instrução
 wire [6:0] opcode = Instr[ 6: 0];
@@ -49,14 +46,14 @@ wire [31:0] ResULA, AULA, BULA;
 wire [31:0] Dado1, Dado2;
 
 // fios da memória
-wire [31:0] Endereco, MemData;
+wire [31:0] Endereco, MemInstr, MemData;
 reg  [31:0] MemLeitura;
 
 // módulos
 
-mux4sync muxOrigPC(
-   .clock(clockCPU), .enable((EscrevePCCond && Zero) || EscrevePC),
-   .sel(OrigPC), .entr0(ResULA), .entr1(SaidaULA), .saida(PC)
+mux4sync muxOrigPC (
+   .enable((EscrevePCCond && Zero) || EscrevePC), .entr0(ResULA), .entr1(SaidaULA),
+   .sel(OrigPC),   .saida(PCEscrita)
 );
 mux4 muxOrigEnder (.enable(1), .entr0(PC),       .entr1(SaidaULA),                  .sel(IouD),     .saida(Endereco));
 mux4 muxOrigRd    (.enable(1), .entr0(SaidaULA), .entr1(PC),       .entr2(RegDado), .sel(OrigRd),   .saida(DadoEscrita));
@@ -90,7 +87,7 @@ ULA ULA (.iControl(codULA), .iA(AULA), .iB(BULA), .oResult(ResULA), .Zero(Zero))
 
 //memory_unit ram (.address(Endereco[11:2]), .clock(clockMem), .data(B), .wren(EscreveMem), .q(MemLeitura));
 
-ramI MemC (.address(Endereco[11:2]), .clock(clockMem), .data(B), .wren(EscreveMem && ~Endereco[28]), .q(Instr));
+ramI MemC (.address(Endereco[11:2]), .clock(clockMem), .data(B), .wren(EscreveMem && ~Endereco[28]), .q(MemInstr));
 ramD MemD (.address(Endereco[11:2]), .clock(clockMem), .data(B), .wren(EscreveMem && Endereco[28]), .q(MemData));
 
 
@@ -99,31 +96,32 @@ initial begin
    PCBack <= TEXT_ADDRESS;
    Instr  <= 32'b0;
    regout <= 32'b0;
-   estado <= 4'b0;
 end
+
 
 always @(posedge clockCPU) begin //or posedge reset
-   /*
-   if(reset) begin
+   if (reset)
       PC     <= TEXT_ADDRESS;
-      PCBack <= TEXT_ADDRESS;
-      estado <= 4'b0000;
+   else begin
+      MemLeitura  <= Endereco[28] ? MemData : MemInstr;
+      RegDado     <= MemLeitura;
+      
+      PC       <= PCEscrita;
    end
-   else
-   */
-   if (EscrevePCB)
-      PCBack   <= PC;
-   if (EscreveIR)
-      RegInstr <= MemLeitura;
-
-   RegDado    <= MemLeitura;
-   MemLeitura <= Endereco[28] ? MemData : Instr;
 end
-/*
-always @(negedge EscrevePCB)
-   PCBack   <= PC;
 
-always @(negedge EscreveIR)
-   RegInstr <= MemLeitura;
-*/
+always @(*) begin
+   if (reset) begin
+      PCBack <= TEXT_ADDRESS;
+      Instr  <= 32'b0;
+      regout <= 32'b0;
+   end
+   else begin
+      if (EscrevePCB)
+         PCBack   <= PC;
+      if (EscreveIR)
+         Instr <= MemLeitura;
+   end
+end
+
 endmodule
