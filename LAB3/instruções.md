@@ -14,9 +14,9 @@ nº endereço
 02 00400008 0001A303     # MAIN: lw      t1, 0(gp)               # t1: 0xFFFFFF0F
 03 0040000C 77700393     #       addi    t2, zero, 1911          # t2: 0x00000777
 04 00400010 007372B3     #       and     t0, t1, t2              # t0: 0x00000707
-05 00400004 007362B3     #       or      t0, t1, t2              # t0: 0xFFFFFF7F
-06 00400008 006382B3     #       add     t0, t2, t1              # t0: 0x00000686 (overflow)
-07 0040000C 406382B3     #       sub     t0, t2, t1              # t0: 0xFFFFF798
+05 00400014 007362B3     #       or      t0, t1, t2              # t0: 0xFFFFFF7F
+06 00400018 006382B3     #       add     t0, t2, t1              # t0: 0x00000686 (overflow)
+07 0040001C 406382B3     #       sub     t0, t2, t1              # t0: 0xFFFFF798
 08 00400020 007322B3     #       slt     t0, t1, t2              # t0: 0x00000001
 09 00400024 0063A2B3     #       slt     t0, t2, t1              # t0: 0x00000000
 10 00400028 00028663     #       beq     t0, zero, 12            # tomado, -> PULA
@@ -44,9 +44,9 @@ nº endereço instr        # decompilação                          # regs     
 02 00400008 0001A303     # MAIN: lw      t1, 0(gp)               # t1: 0xFFFFFF0F            # 7
 03 0040000C 77700393     #       addi    t2, zero, 1911          # t2: 0x00000777            # 5
 04 00400010 007372B3     #       and     t0, t1, t2              # t0: 0x00000707            # 5
-05 00400004 007362B3     #       or      t0, t1, t2              # t0: 0xFFFFFF7F            # 5
-06 00400008 006382B3     #       add     t0, t2, t1              # t0: 0x00000686 (overflow) # 5
-07 0040000C 406382B3     #       sub     t0, t2, t1              # t0: 0xFFFFF798            # 5
+05 00400014 007362B3     #       or      t0, t1, t2              # t0: 0xFFFFFF7F            # 5
+06 00400018 006382B3     #       add     t0, t2, t1              # t0: 0x00000686 (overflow) # 5
+07 0040001C 406382B3     #       sub     t0, t2, t1              # t0: 0xFFFFF798            # 5
 08 00400020 007322B3     #       slt     t0, t1, t2              # t0: 0x00000001            # 5
 09 00400024 0063A2B3     #       slt     t0, t2, t1              # t0: 0x00000000            # 5
 10 00400028 00028663     #       beq     t0, zero, 12            # tomado, -> PULA           # 4

@@ -55,10 +55,13 @@ mux4sync muxOrigPC (
    .enable((EscrevePCCond && Zero) || EscrevePC), .entr0(ResULA), .entr1(SaidaULA),
    .sel(OrigPC),   .saida(PCEscrita)
 );
-mux4 muxOrigEnder (.enable(1), .entr0(PC),       .entr1(SaidaULA),                  .sel(IouD),     .saida(Endereco));
-mux4 muxOrigRd    (.enable(1), .entr0(SaidaULA), .entr1(PC),       .entr2(RegDado), .sel(OrigRd),   .saida(DadoEscrita));
-mux4 muxOrigA     (.enable(1), .entr0(PCBack),   .entr1(A),        .entr2(PC),      .sel(OrigAULA), .saida(AULA));
-mux4 muxOrigB     (.enable(1), .entr0(B),        .entr1(32'd4),    .entr2(Imm),     .sel(OrigBULA), .saida(BULA));
+mux4sync muxOrigRd (
+   .enable(1'b1), .entr0(SaidaULA), .entr1(PC), .entr2(RegDado),
+   .sel(OrigRd), .saida(DadoEscrita)
+);
+mux4 muxOrigEnder (.enable(1'b1), .entr0(PC),       .entr1(SaidaULA),                  .sel(IouD),     .saida(Endereco));
+mux4 muxOrigA     (.enable(1'b1), .entr0(PCBack),   .entr1(A),        .entr2(PC),      .sel(OrigAULA), .saida(AULA));
+mux4 muxOrigB     (.enable(1'b1), .entr0(B),        .entr1(32'd4),    .entr2(Imm),     .sel(OrigBULA), .saida(BULA));
 
 
 ControleMulti Controle (
@@ -79,7 +82,7 @@ ImmGen ImmGen (.iInstrucao(Instr), .oImm(Imm));
 BancoReg BancoReg (
    .iCLK(clockCPU), .iRST(reset), .iRegWrite(EscreveReg),
    .iReadRegister1(rs1), .iReadRegister2(rs2), .iWriteRegister(rd),
-   .iWriteData(DadoEscrita), .oReadData1(A), .oReadData2(B),
+   .iWriteData(DadoEscrita), .oReadData1(Dado1), .oReadData2(Dado2),
    .iRegDispSelect(regin), .oRegDisp(regout)
 );
 
@@ -95,6 +98,7 @@ initial begin
    PC     <= TEXT_ADDRESS;
    PCBack <= TEXT_ADDRESS;
    Instr  <= 32'b0;
+   estado <= 4'b0;
    regout <= 32'b0;
 end
 
@@ -104,9 +108,12 @@ always @(posedge clockCPU) begin //or posedge reset
       PC     <= TEXT_ADDRESS;
    else begin
       MemLeitura  <= Endereco[28] ? MemData : MemInstr;
-      RegDado     <= MemLeitura;
+      RegDado     <= MemData;
       
       PC       <= PCEscrita;
+      A        <= Dado1;
+      B        <= Dado2;
+      SaidaULA <= ResULA;
    end
 end
 
@@ -114,13 +121,12 @@ always @(*) begin
    if (reset) begin
       PCBack <= TEXT_ADDRESS;
       Instr  <= 32'b0;
-      regout <= 32'b0;
    end
    else begin
       if (EscrevePCB)
          PCBack   <= PC;
       if (EscreveIR)
-         Instr <= MemLeitura;
+         Instr <= MemInstr;
    end
 end
 

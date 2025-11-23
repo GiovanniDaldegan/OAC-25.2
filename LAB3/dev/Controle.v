@@ -282,7 +282,7 @@ always @(posedge CLK or posedge RST) begin
          EscrevePC      <= 1'b0;
          EscrevePCCond  <= 1'b0;
          EscrevePCB     <= 1'b0;
-         IouD           <= 1'b1;
+         IouD           <= 1'b1;    // RegDado = MemData
          EscreveIR      <= 1'b0;
          LeMem          <= 1'b1;
          EscreveMem     <= 1'b0;
@@ -349,11 +349,11 @@ always @(posedge CLK or posedge RST) begin
          EscreveIR      <= 1'b0;
          LeMem          <= 1'b0;
          EscreveMem     <= 1'b0;
-         EscreveReg     <= 1'b1;
+         EscreveReg     <= 1'b0;
          
          OrigPC         <= 2'b00;
-         OrigRd         <= 2'b00;
          /*
+         OrigRd         <= 2'b00;
          OrigAULA       <= 2'b;
          OrigBULA       <= 2'b;
          opULA          <= 2'b;
