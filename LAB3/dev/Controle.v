@@ -62,14 +62,14 @@ always @(posedge CLK or posedge RST) begin
    
    case(estado)
       IF1: begin
-         EscrevePC      <= 1'b1;    // atualiza PC
-         EscrevePCCond  <= 1'b0;    // não é branch
-         EscrevePCB     <= 1'b1;    // atualiza PC
+         EscrevePC      <= 1'b0;
+         EscrevePCCond  <= 1'b0;
+         EscrevePCB     <= 1'b0;
          IouD           <= 1'b0;    // leitura de instrução
-         EscreveIR      <= 1'b1;    // atualiza a instrução atual
+         EscreveIR      <= 1'b0;
          LeMem          <= 1'b1;    // lê da memória
-         EscreveMem     <= 1'b0;    // não escreve na memória
-         EscreveReg     <= 1'b0;    // não escreve no rd
+         EscreveMem     <= 1'b0;
+         EscreveReg     <= 1'b0;
          
          OrigPC         <= 2'b00;   // PC vem da ULA
          // OrigRd         <= 2'b00;// não importa rd
@@ -80,22 +80,21 @@ always @(posedge CLK or posedge RST) begin
          prox_estado    <= IF2;
       end
       IF2: begin
-         /*
-         EscrevePC      <= 1'b;
-         EscrevePCCond  <= 1'b;
-         EscrevePCB     <= 1'b;
-         IouD           <= 1'b;
-         EscreveIR      <= 1'b;
-         LeMem          <= 1'b;
-         EscreveMem     <= 1'b;
-         EscreveReg     <= 1'b;
+         EscrevePC      <= 1'b1;    // atualiza PC
+         EscrevePCCond  <= 1'b0;    // não é branch
+         EscrevePCB     <= 1'b1;    // atualiza PCBack
+         IouD           <= 1'b0;    // leitura de instrução
+         EscreveIR      <= 1'b1;    // atualiza a instrução atual
+         LeMem          <= 1'b1;    // lê da memória
+         EscreveMem     <= 1'b0;    // não escreve na memória
+         EscreveReg     <= 1'b0;    // não escreve no rd
          
-         OrigPC         <= 2'b;
-         OrigRd         <= 2'b;
-         OrigAULA       <= 2'b;
-         OrigBULA       <= 2'b;
-         opULA          <= 2'b;
-         */
+         OrigPC         <= 2'b00;   // novo PC vem da ULA
+         //OrigRd         <= 2'b;   // não importa rd
+         OrigAULA       <= 2'b10;   // A ULA: PC
+         OrigBULA       <= 2'b01;   // B ULA: 4
+         opULA          <= 2'b00;   // PC+4
+         
          prox_estado = ID;
       end
       
