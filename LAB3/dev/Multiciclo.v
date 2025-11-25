@@ -59,9 +59,9 @@ mux4sync muxOrigRd (
    .enable(1'b1), .entr0(SaidaULA), .entr1(PC), .entr2(RegDado),
    .sel(OrigRd), .saida(DadoEscrita)
 );
-mux4 muxOrigEnder (.enable(1'b1), .entr0(PC),       .entr1(SaidaULA),                  .sel(IouD),     .saida(Endereco));
-mux4 muxOrigA     (.enable(1'b1), .entr0(PCBack),   .entr1(A),        .entr2(PC),      .sel(OrigAULA), .saida(AULA));
-mux4 muxOrigB     (.enable(1'b1), .entr0(B),        .entr1(32'd4),    .entr2(Imm),     .sel(OrigBULA), .saida(BULA));
+mux4 muxOrigEnder (.enable(1'b1), .entr0(PC),       .entr1(SaidaULA),                          .sel(IouD),     .saida(Endereco));
+mux4 muxOrigA     (.enable(1'b1), .entr0(PCBack),   .entr1(A),        .entr2(PC),  .entr3(0),  .sel(OrigAULA), .saida(AULA));
+mux4 muxOrigB     (.enable(1'b1), .entr0(B),        .entr1(32'd4),    .entr2(Imm),             .sel(OrigBULA), .saida(BULA));
 
 
 ControleMulti Controle (
