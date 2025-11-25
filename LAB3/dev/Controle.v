@@ -34,22 +34,23 @@ localparam  IF1         = 6'd0,
             ID          = 6'd2,
 
             R_EX        = 6'd3,
-            I_EX        = 6'd4,
-               ULA_WB   = 6'd9,
+            ADDI_EX     = 6'd4,
+            LUI_EX      = 6'd5,
+               ULA_WB   = 6'd10,
             
-            MEM_EX      = 6'd5,
-               SW_MEM1  = 6'd10,
-               SW_MEM2  = 6'd11,
+            MEM_EX      = 6'd6,
+               SW_MEM1  = 6'd11,
+               SW_MEM2  = 6'd12,
                
-               LW_MEM1  = 6'd12,
-               LW_MEM2  = 6'd13,
-               LW_WB    = 6'd14,
+               LW_MEM1  = 6'd13,
+               LW_MEM2  = 6'd14,
+               LW_WB    = 6'd15,
             
-            BEQ_EX      = 6'd6,
-            JAL_EX      = 6'd7,
+            BEQ_EX      = 6'd7,
+            JAL_EX      = 6'd8,
             
-            JALR_WB     = 6'd8,
-               JALR_EX  = 6'd15;
+            JALR_WB     = 6'd9,
+               JALR_EX  = 6'd16;
 
 
 reg [4:0] prox_estado = 5'b0;
@@ -62,8 +63,8 @@ always @(posedge CLK or posedge RST) begin
    
    case(estado)
       IF1: begin
-         EscrevePC      <= 1'b0;
-         EscrevePCCond  <= 1'b0;
+         EscrevePC      <= 1'b1;    // atualiza PC
+         EscrevePCCond  <= 1'b0;    // não é branch
          EscrevePCB     <= 1'b0;
          IouD           <= 1'b0;    // leitura de instrução
          EscreveIR      <= 1'b0;
@@ -80,20 +81,20 @@ always @(posedge CLK or posedge RST) begin
          prox_estado    <= IF2;
       end
       IF2: begin
-         EscrevePC      <= 1'b1;    // atualiza PC
-         EscrevePCCond  <= 1'b0;    // não é branch
+         EscrevePC      <= 1'b0;
+         EscrevePCCond  <= 1'b0;
          EscrevePCB     <= 1'b1;    // atualiza PCBack
-         IouD           <= 1'b0;    // leitura de instrução
+         IouD           <= 1'b0;
          EscreveIR      <= 1'b1;    // atualiza a instrução atual
          LeMem          <= 1'b1;    // lê da memória
          EscreveMem     <= 1'b0;    // não escreve na memória
          EscreveReg     <= 1'b0;    // não escreve no rd
          
-         OrigPC         <= 2'b00;   // novo PC vem da ULA
-         //OrigRd         <= 2'b;   // não importa rd
-         OrigAULA       <= 2'b10;   // A ULA: PC
-         OrigBULA       <= 2'b01;   // B ULA: 4
-         opULA          <= 2'b00;   // PC+4
+         OrigPC         <= 2'b00;
+         //OrigRd         <= 2'b;
+         OrigAULA       <= 2'b10;   // n usado
+         OrigBULA       <= 2'b01;
+         opULA          <= 2'b00;
          
          prox_estado = ID;
       end
@@ -118,8 +119,8 @@ always @(posedge CLK or posedge RST) begin
          
          case(opcode)
             OPC_RTYPE:  prox_estado <= R_EX;
-            OPC_OPIMM,
-            OPC_LUI:    prox_estado <= I_EX;
+            OPC_OPIMM:  prox_estado <= ADDI_EX;
+            OPC_LUI:    prox_estado <= LUI_EX;
             OPC_LOAD,
             OPC_STORE:  prox_estado <= MEM_EX;
             OPC_BRANCH: prox_estado <= BEQ_EX;
@@ -150,7 +151,7 @@ always @(posedge CLK or posedge RST) begin
          prox_estado    <= ULA_WB;
       end
       
-      I_EX: begin
+      ADDI_EX: begin
          EscrevePC      <= 1'b0;
          EscrevePCCond  <= 1'b0;
          EscrevePCB     <= 1'b0;
@@ -167,6 +168,27 @@ always @(posedge CLK or posedge RST) begin
          OrigAULA       <= 2'b01;   // A
          OrigBULA       <= 2'b10;   // imm
          opULA          <= 2'b00;   // A + imm
+         
+         prox_estado    <= ULA_WB;
+      end
+      
+      LUI_EX: begin
+         EscrevePC      <= 1'b0;
+         EscrevePCCond  <= 1'b0;
+         EscrevePCB     <= 1'b0;
+         //IouD           <= 1'b;
+         EscreveIR      <= 1'b0;
+         LeMem          <= 1'b0;
+         EscreveMem     <= 1'b0;
+         EscreveReg     <= 1'b0;
+         
+         /*
+         OrigPC         <= 2'b;
+         OrigRd         <= 2'b;
+         */
+         OrigAULA       <= 2'b11;   // 0
+         OrigBULA       <= 2'b10;   // imm
+         opULA          <= 2'b00;   // 0 + imm
          
          prox_estado    <= ULA_WB;
       end
