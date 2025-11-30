@@ -65,8 +65,6 @@ set_global_assignment -name VERILOG_FILE Multiciclo.v
 set_global_assignment -name VERILOG_FILE Pipeline.v
 set_global_assignment -name VERILOG_FILE Registers.v
 set_global_assignment -name VERILOG_FILE ImmGen.v
-set_global_assignment -name QIP_FILE ramI.qip
-set_global_assignment -name QIP_FILE ramD.qip
 set_global_assignment -name MIF_FILE de1_text.mif
 set_global_assignment -name MIF_FILE de1_data.mif
 set_global_assignment -name VECTOR_WAVEFORM_FILE TopDE.vwf
@@ -77,4 +75,5 @@ set_global_assignment -name VERILOG_FILE adder.v
 set_global_assignment -name VERILOG_FILE BancoReg.v
 set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform1.vwf
 set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform.vwf
-set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform2.vwf
+set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform2.vwfset_global_assignment -name QIP_FILE ramD.qip
+set_global_assignment -name QIP_FILE ramI.qip
