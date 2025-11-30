@@ -11,6 +11,13 @@
  * B 63: beq
  * I 67: jalr
  * J 6F: jal
+ * 
+ * Entradas
+ * muxOrig Reg       muxOrig PC
+ * 00 SaidaULA       00 PC4
+ * 01 MemData        01 PCImm
+ * 10 PC4            10 SaidaULA
+ * 11 Imm            11 
  */
 
 `ifndef PARAM
@@ -30,10 +37,10 @@ begin
    case (opcode)
       OPC_RTYPE:  begin       // 33 - add sub slt and or
          EscreveReg  <= 1'b1;
-         OrigReg     <= 2'b00;
+         OrigReg     <= 2'b00;         // rd <- SaidaULA (rs1 op rs2)
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         OrigPC      <= 2'b00;
+         OrigPC      <= 2'b00;         // PC = PC+4
          OrigULA     <= 1'b0;
          opULA       <= 2'b10;
       end
@@ -48,12 +55,14 @@ begin
       end
       OPC_LUI:    begin       // 37 - lui
          EscreveReg  <= 1'b1;
-         OrigReg     <= 2'b00;         // rd = SaidaULA
+         OrigReg     <= 2'b11;         // rd <- Imm
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
          OrigPC      <= 2'b00;
+         /*
          OrigULA     <= 1'b1;
          opULA       <= 2'b00;
+         */
       end
       OPC_LOAD:   begin       // 03 - lw
          EscreveReg  <= 1'b1;
@@ -69,7 +78,7 @@ begin
          //OrigReg     <= 2'b00;
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b1;
-         OrigPC      <= 2'b00;         // PC = PC + 4
+         OrigPC      <= 2'b00;
          OrigULA     <= 1'b1;
          opULA       <= 2'b00;
       end
@@ -78,13 +87,13 @@ begin
          //OrigReg     <= 2'b00;
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         OrigPC      <= 2'b01 && {1'b0, Zero};  // PC = PC + imm
+         OrigPC      <= 2'b01 && {1'b0, Zero};  // PC = PC+imm ou PC+4
          OrigULA     <= 1'b0;
          opULA       <= 2'b01;
       end
       OPC_JALR:   begin       // 67 - jalr
          EscreveReg  <= 1'b1;
-         OrigReg     <= 2'b10;         // rd = PC + 4
+         OrigReg     <= 2'b10;         // rd <- PC+4
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
          OrigPC      <= 2'b10;         // PC = SaidaULA (rs1 + imm)
@@ -93,10 +102,10 @@ begin
       end
       OPC_JAL:    begin       // 6F - jal
          EscreveReg  <= 1'b1;
-         OrigReg     <= 2'b10;         // rd = PC + 4
+         OrigReg     <= 2'b10;         // rd <- PC+4
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         OrigPC      <= 2'b01;         // PC = PC + imm
+         OrigPC      <= 2'b01;         // PC = PC+imm
 //       OrigULA     <= 1'b;
 //       opULA       <= 2'b;
       end

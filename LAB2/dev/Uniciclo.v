@@ -78,7 +78,7 @@ ImmGen GeraImm(.iInstrucao(Instr), .oImm(Imm));
 
 // multiplexadores
 mux4 muxOrigULA (.entr0(Dado2), .entr1(Imm), .sel(OrigULA), .saida(OperadorULA));
-mux4 muxEscrReg (.entr0(MemData), .entr1(SaidaULA), .entr2(PC4), .sel(OrigReg), .saida(DadoEscrita));
+mux4 muxEscrReg (.entr0(SaidaULA), .entr1(MemData), .entr2(PC4), .entr3(Imm), .sel(OrigReg), .saida(DadoEscrita));
 mux4 muxOrigPC  (.entr0(PC4), .entr1(PCImm), .entr2(SaidaULA), .sel(OrigPC), .saida(PCEscrita));
 
 
