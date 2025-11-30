@@ -7,23 +7,15 @@ module Uniciclo (
     input  logic        reset,
     input  logic [4:0]  RegIn,
     output logic [31:0] PC, Instr, RegOut
-    );
-    
-    
-initial
-begin
-   PC      <= 32'h0040_0000;
-   Instr   <= 32'b0;
-   RegOut  <= 32'b0;
-end
+);
 
 // fios da instrução
-wire [6:0] opcode = Instr[6:0];
+wire [6:0] opcode = Instr[ 6: 0];
 wire [2:0] funct3 = Instr[14:12];
 wire [6:0] funct7 = Instr[31:25];
 wire [4:0] rs1    = Instr[19:15];
 wire [4:0] rs2    = Instr[24:20];
-wire [4:0] rd     = Instr[11:7];
+wire [4:0] rd     = Instr[11: 7];
 
 // fios de controle
 wire LeMem, EscreveMem, OrigULA, EscreveReg;
@@ -91,7 +83,7 @@ ULA ULA (.iControl(codULA), .iA(Dado1), .iB(OperadorULA), .oResult(SaidaULA), .Z
 
 
 // Instanciação das memórias
-ramI MemC (.address(PC[11:2]), .clock(clockMem), .data(), .wren(1'b0), .q(Instr));
+ramI MemI (.address(PC[11:2]), .clock(clockMem), .data(), .wren(1'b0), .q(Instr));
 ramD MemD (.address(SaidaULA[11:2]), .clock(clockMem), .data(Dado2), .wren(EscreveMem), .q(MemData));
 
 

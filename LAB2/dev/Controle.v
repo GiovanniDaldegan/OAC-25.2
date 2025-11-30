@@ -12,7 +12,7 @@
  * I 67: jalr
  * J 6F: jal
  * 
- * Entradas
+ * Colinha das entradas dos muxs
  * muxOrig Reg       muxOrig PC
  * 00 SaidaULA       00 PC4
  * 01 MemData        01 PCImm
@@ -31,6 +31,11 @@ module Controle (
    output wire [1:0] opULA, OrigReg, OrigPC
 );
 
+initial begin
+   EscreveReg <= 1'b0;
+   LeMem      <= 1'b0;
+   EscreveMem <= 1'b0;
+end
 
 always @(*)
 begin

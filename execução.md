@@ -65,7 +65,7 @@ nº endereço instr        # disassembly                           # regs
 04 00400010 007372B3     #       and     t0, t1, t2              # t0: 0x00000707
 05 00400014 007362B3     #       or      t0, t1, t2              # t0: 0xFFFFFF7F
 06 00400018 006382B3     #       add     t0, t2, t1              # t0: 0x00000686 (overflow)
-07 0040001C 406382B3     #       sub     t0, t2, t1              # t0: 0xFFFFF798
+07 0040001C 406382B3     #       sub     t0, t2, t1              # t0: 0x00000868 (underflow)
 08 00400020 007322B3     #       slt     t0, t1, t2              # t0: 0x00000001
 09 00400024 0063A2B3     #       slt     t0, t2, t1              # t0: 0x00000000
 10 00400028 00028663     #       beq     t0, zero, 12            # tomado, -> PULA
@@ -74,7 +74,7 @@ nº endereço instr        # disassembly                           # regs
 17 00400044 0051A223     #       sw      t0, 4(gp)               # 4(gp): 0x0000007F
 18 00400048 0001A283     #       lw      t0, 0(gp)               # t0: 0xFFFFFF0F
 19 0040004C 0041A283     #       lw      t0, 4(gp)               # t0: 0x0000007F
-20 00400050 00008067     #       jalr    zero, ra, 0             # -> PULA + 4
+20 00400050 00008067     #       jalr    zero, ra, 0             # -> PULA + 4 (ra)
 14 00400038 CCC00293     #       addi    t0, zero, -820          # t0: 0xFFFFFCCC
 15 0040003C 0000006F     # FIM:  jal     zero, 0                 #
 15 0040003C ... loop infinito
