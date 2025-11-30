@@ -87,12 +87,12 @@ adder SomaPC4   (.iA(PC), .iB(32'd4), .out(PC4));
 adder SomaPCImm (.iA(PC), .iB(Imm), .out(PCImm));
 
 
-ALU ULA (.iControl(codULA), .iA(Dado1), .iB(OperadorULA), .oResult(SaidaULA), .Zero(Zero));
+ULA ULA (.iControl(codULA), .iA(Dado1), .iB(OperadorULA), .oResult(SaidaULA), .Zero(Zero));
 
 
 // Instanciação das memórias
 ramI MemC (.address(PC[11:2]), .clock(clockMem), .data(), .wren(1'b0), .q(Instr));
-ramD MemD (.address(SaidaULA[11:2]), .clock(clockMem), .data(Dados2), .wren(EscreveMem), .q(MemData));
+ramD MemD (.address(SaidaULA[11:2]), .clock(clockMem), .data(Dado2), .wren(EscreveMem), .q(MemData));
 
 
 always @(posedge clockCPU  or posedge reset)
