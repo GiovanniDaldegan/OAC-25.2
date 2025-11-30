@@ -95,6 +95,15 @@ ramI MemC (.address(PC[11:2]), .clock(clockMem), .data(), .wren(1'b0), .q(Instr)
 ramD MemD (.address(SaidaULA[11:2]), .clock(clockMem), .data(Dado2), .wren(EscreveMem), .q(MemData));
 
 
+initial
+begin
+   PC        <= 32'h0040_0000;
+   PCEscrita <= 32'h0040_0004;
+   Instr     <= 32'b0;
+   RegOut    <= 32'b0;
+   SaidaULA  <= 32'b0;
+end
+
 always @(posedge clockCPU  or posedge reset)
 begin
 if(reset)

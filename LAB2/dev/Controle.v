@@ -87,7 +87,7 @@ begin
          //OrigReg     <= 2'b00;
          LeMem       <= 1'b0;
          EscreveMem  <= 1'b0;
-         OrigPC      <= 2'b01 && {1'b0, Zero};  // PC = PC+imm ou PC+4
+         OrigPC      <= {1'b0, Zero};  // PC = PC+imm ou PC+4
          OrigULA     <= 1'b0;
          opULA       <= 2'b01;
       end

@@ -37,10 +37,6 @@ begin
       registers[SPR] = STACK_ADDRESS;
    end
    else begin
-//      oRegDisp   = registers[iRegDispSelect];
-//      oReadData1 = registers[iReadRegister1];
-//      oReadData2 = registers[iReadRegister2];
-      
       if(iRegWrite && (iWriteRegister != 5'b0))
          registers[iWriteRegister] <= iWriteData;
       
