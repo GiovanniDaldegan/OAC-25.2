@@ -1,12 +1,12 @@
 /*<simulation_settings>
-<ftestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off TopDE -c TopDE --vector_source="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/Waveform1.vwf" --testbench_file="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/simulation/qsim/Waveform1.vwf.vt"</ftestbench_cmd>
-<ttestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off TopDE -c TopDE --vector_source="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/Waveform1.vwf" --testbench_file="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/simulation/qsim/Waveform1.vwf.vt"</ttestbench_cmd>
+<ftestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off TopDE -c TopDE --vector_source="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/bancoreg.vwf" --testbench_file="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/simulation/qsim/bancoreg.vwf.vt"</ftestbench_cmd>
+<ttestbench_cmd>quartus_eda --gen_testbench --tool=modelsim_oem --format=verilog --write_settings_files=off TopDE -c TopDE --vector_source="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/bancoreg.vwf" --testbench_file="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/simulation/qsim/bancoreg.vwf.vt"</ttestbench_cmd>
 <fnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=on --flatten_buses=off --tool=modelsim_oem --format=verilog --output_directory="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/simulation/qsim/" TopDE -c TopDE</fnetlist_cmd>
 <tnetlist_cmd>quartus_eda --write_settings_files=off --simulation --functional=off --flatten_buses=off --timescale=1ps --tool=modelsim_oem --format=verilog --output_directory="C:/Users/giova/dev/github/OAC-25.2/LAB2/dev/simulation/qsim/" TopDE -c TopDE</tnetlist_cmd>
 <modelsim_script>onerror {exit -code 1}
 vlib work
 vlog -work work TopDE.vo
-vlog -work work Waveform1.vwf.vt
+vlog -work work bancoreg.vwf.vt
 vsim -voptargs="+acc" -c -t 1ps -L cyclonev_ver -L altera_ver -L altera_mf_ver -L 220model_ver -L sgate_ver -L altera_lnsim_ver work.BancoReg_vlg_vec_tst
 vcd file -direction TopDE.msim.vcd
 vcd add -internal BancoReg_vlg_vec_tst/*
@@ -21,11 +21,12 @@ after 2500 simTimestamp
 run -all
 quit -f
 
+
 </modelsim_script>
 <modelsim_script_timing>onerror {exit -code 1}
 vlib work
 vlog -work work TopDE.vo
-vlog -work work Waveform1.vwf.vt
+vlog -work work bancoreg.vwf.vt
 vsim -voptargs="+acc" -c -t 1ps -L cyclonev_ver -L altera_ver -L altera_mf_ver -L 220model_ver -L sgate_ver -L altera_lnsim_ver work.BancoReg_vlg_vec_tst
 vcd file -direction TopDE.msim.vcd
 vcd add -internal BancoReg_vlg_vec_tst/*
@@ -39,6 +40,7 @@ proc simTimestamp {} {
 after 2500 simTimestamp
 run -all
 quit -f
+
 
 </modelsim_script_timing>
 <hdl_lang>verilog</hdl_lang>
@@ -1854,8 +1856,8 @@ TRANSITION_LIST("iWriteData[31]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 120.0;
+		LEVEL 1 FOR 140.0;
+		LEVEL 0 FOR 50.0;
 		LEVEL 1 FOR 90.0;
 		LEVEL 0 FOR 670.0;
 	}
@@ -1867,8 +1869,8 @@ TRANSITION_LIST("iWriteData[30]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 880.0;
+		LEVEL 1 FOR 40.0;
+		LEVEL 0 FOR 910.0;
 	}
 }
 
@@ -1878,8 +1880,8 @@ TRANSITION_LIST("iWriteData[29]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 880.0;
+		LEVEL 1 FOR 140.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -1889,8 +1891,8 @@ TRANSITION_LIST("iWriteData[28]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 880.0;
+		LEVEL 1 FOR 40.0;
+		LEVEL 0 FOR 910.0;
 	}
 }
 
@@ -1900,8 +1902,8 @@ TRANSITION_LIST("iWriteData[27]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 880.0;
+		LEVEL 1 FOR 140.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -1911,8 +1913,8 @@ TRANSITION_LIST("iWriteData[26]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 880.0;
+		LEVEL 1 FOR 40.0;
+		LEVEL 0 FOR 910.0;
 	}
 }
 
@@ -1922,8 +1924,8 @@ TRANSITION_LIST("iWriteData[25]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 880.0;
+		LEVEL 1 FOR 140.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -1933,8 +1935,8 @@ TRANSITION_LIST("iWriteData[24]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 880.0;
+		LEVEL 1 FOR 40.0;
+		LEVEL 0 FOR 910.0;
 	}
 }
 
@@ -1944,8 +1946,8 @@ TRANSITION_LIST("iWriteData[23]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 880.0;
+		LEVEL 1 FOR 140.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -1955,8 +1957,8 @@ TRANSITION_LIST("iWriteData[22]")
 	{
 		REPEAT = 1;
 		LEVEL 0 FOR 50.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 880.0;
+		LEVEL 1 FOR 40.0;
+		LEVEL 0 FOR 910.0;
 	}
 }
 
@@ -1965,7 +1967,9 @@ TRANSITION_LIST("iWriteData[21]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 1000.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -1983,7 +1987,9 @@ TRANSITION_LIST("iWriteData[19]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 1000.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -2001,7 +2007,9 @@ TRANSITION_LIST("iWriteData[17]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 1000.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -2019,7 +2027,9 @@ TRANSITION_LIST("iWriteData[15]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 1000.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -2037,7 +2047,9 @@ TRANSITION_LIST("iWriteData[13]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 1000.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -2055,7 +2067,9 @@ TRANSITION_LIST("iWriteData[11]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 1000.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -2073,7 +2087,9 @@ TRANSITION_LIST("iWriteData[9]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 1000.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
+		LEVEL 0 FOR 810.0;
 	}
 }
 
@@ -2091,8 +2107,8 @@ TRANSITION_LIST("iWriteData[7]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 120.0;
-		LEVEL 1 FOR 70.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
 		LEVEL 0 FOR 810.0;
 	}
 }
@@ -2102,9 +2118,7 @@ TRANSITION_LIST("iWriteData[6]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 120.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 810.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -2113,8 +2127,8 @@ TRANSITION_LIST("iWriteData[5]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 120.0;
-		LEVEL 1 FOR 70.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
 		LEVEL 0 FOR 810.0;
 	}
 }
@@ -2124,9 +2138,7 @@ TRANSITION_LIST("iWriteData[4]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 120.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 810.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -2135,8 +2147,8 @@ TRANSITION_LIST("iWriteData[3]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 120.0;
-		LEVEL 1 FOR 70.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
 		LEVEL 0 FOR 810.0;
 	}
 }
@@ -2146,9 +2158,7 @@ TRANSITION_LIST("iWriteData[2]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 120.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 810.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 
@@ -2157,8 +2167,8 @@ TRANSITION_LIST("iWriteData[1]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 120.0;
-		LEVEL 1 FOR 70.0;
+		LEVEL 0 FOR 90.0;
+		LEVEL 1 FOR 100.0;
 		LEVEL 0 FOR 810.0;
 	}
 }
@@ -2168,9 +2178,7 @@ TRANSITION_LIST("iWriteData[0]")
 	NODE
 	{
 		REPEAT = 1;
-		LEVEL 0 FOR 120.0;
-		LEVEL 1 FOR 70.0;
-		LEVEL 0 FOR 810.0;
+		LEVEL 0 FOR 1000.0;
 	}
 }
 

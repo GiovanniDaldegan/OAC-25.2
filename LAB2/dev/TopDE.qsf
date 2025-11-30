@@ -56,7 +56,9 @@ set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
-set_global_assignment -name VECTOR_WAVEFORM_FILE uniciclo.vwf
+set_global_assignment -name VECTOR_WAVEFORM_FILE controle.vwf
+set_global_assignment -name VECTOR_WAVEFORM_FILE ula.vwf
+set_global_assignment -name VECTOR_WAVEFORM_FILE bancoreg.vwf
 set_global_assignment -name VERILOG_FILE ULA.v
 set_global_assignment -name VERILOG_FILE TopDE.v
 set_global_assignment -name VERILOG_FILE Parametros.v
@@ -73,7 +75,6 @@ set_global_assignment -name VERILOG_FILE Controle.v
 set_global_assignment -name VERILOG_FILE ControleULA.v
 set_global_assignment -name VERILOG_FILE adder.v
 set_global_assignment -name VERILOG_FILE BancoReg.v
-set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform1.vwf
-set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform.vwf
-set_global_assignment -name VECTOR_WAVEFORM_FILE Waveform2.vwfset_global_assignment -name QIP_FILE ramD.qip
+set_global_assignment -name VECTOR_WAVEFORM_FILE uniciclo.vwf
+set_global_assignment -name QIP_FILE ramD.qip
 set_global_assignment -name QIP_FILE ramI.qip
