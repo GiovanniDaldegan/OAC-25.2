@@ -22,6 +22,8 @@ begin
          saida <= entr2;
       2'b11:
          saida <= entr3;
+      default:
+         saida <= 32'b0;
    endcase
 end
 

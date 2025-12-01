@@ -1,10 +1,10 @@
-// megafunction wizard: %RAM: 1-PORT%
+// megafunction wizard: %RAM: 1-PORT%VBB%
 // GENERATION: STANDARD
 // VERSION: WM1.0
 // MODULE: altsyncram 
 
 // ============================================================
-// File Name: ramI.v
+// File Name: ramD.v
 // Megafunction Name(s):
 // 			altsyncram
 //
@@ -16,7 +16,6 @@
 //
 // 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
 // ************************************************************
-
 
 //Copyright (C) 2025  Altera Corporation. All rights reserved.
 //Your use of Altera Corporation's design tools, logic functions 
@@ -33,11 +32,7 @@
 //refer to the Altera Software License Subscription Agreements 
 //on the Quartus Prime software download page.
 
-
-// synopsys translate_off
-`timescale 1 ps / 1 ps
-// synopsys translate_on
-module ramI (
+module ramD (
 	address,
 	clock,
 	data,
@@ -56,51 +51,6 @@ module ramI (
 `ifndef ALTERA_RESERVED_QIS
 // synopsys translate_on
 `endif
-
-	wire [31:0] sub_wire0;
-	wire [31:0] q = sub_wire0[31:0];
-
-	altsyncram	altsyncram_component (
-				.address_a (address),
-				.clock0 (clock),
-				.data_a (data),
-				.wren_a (wren),
-				.q_a (sub_wire0),
-				.aclr0 (1'b0),
-				.aclr1 (1'b0),
-				.address_b (1'b1),
-				.addressstall_a (1'b0),
-				.addressstall_b (1'b0),
-				.byteena_a (1'b1),
-				.byteena_b (1'b1),
-				.clock1 (1'b1),
-				.clocken0 (1'b1),
-				.clocken1 (1'b1),
-				.clocken2 (1'b1),
-				.clocken3 (1'b1),
-				.data_b (1'b1),
-				.eccstatus (),
-				.q_b (),
-				.rden_a (1'b1),
-				.rden_b (1'b1),
-				.wren_b (1'b0));
-	defparam
-		altsyncram_component.clock_enable_input_a = "BYPASS",
-		altsyncram_component.clock_enable_output_a = "BYPASS",
-		altsyncram_component.init_file = "de1_text.mif",
-		altsyncram_component.intended_device_family = "Cyclone V",
-		altsyncram_component.lpm_hint = "ENABLE_RUNTIME_MOD=YES,INSTANCE_NAME=TEXT",
-		altsyncram_component.lpm_type = "altsyncram",
-		altsyncram_component.numwords_a = 1024,
-		altsyncram_component.operation_mode = "SINGLE_PORT",
-		altsyncram_component.outdata_aclr_a = "NONE",
-		altsyncram_component.outdata_reg_a = "CLOCK0",
-		altsyncram_component.power_up_uninitialized = "FALSE",
-		altsyncram_component.read_during_write_mode_port_a = "DONT_CARE",
-		altsyncram_component.widthad_a = 10,
-		altsyncram_component.width_a = 32,
-		altsyncram_component.width_byteena_a = 1;
-
 
 endmodule
 
@@ -124,9 +74,9 @@ endmodule
 // Retrieval info: PRIVATE: INIT_TO_SIM_X NUMERIC "0"
 // Retrieval info: PRIVATE: INTENDED_DEVICE_FAMILY STRING "Cyclone V"
 // Retrieval info: PRIVATE: JTAG_ENABLED NUMERIC "1"
-// Retrieval info: PRIVATE: JTAG_ID STRING "TEXT"
+// Retrieval info: PRIVATE: JTAG_ID STRING "DATA"
 // Retrieval info: PRIVATE: MAXIMUM_DEPTH NUMERIC "0"
-// Retrieval info: PRIVATE: MIFfilename STRING "de1_text.mif"
+// Retrieval info: PRIVATE: MIFfilename STRING "de1_data.mif"
 // Retrieval info: PRIVATE: NUMWORDS_A NUMERIC "1024"
 // Retrieval info: PRIVATE: RAM_BLOCK_TYPE NUMERIC "0"
 // Retrieval info: PRIVATE: READ_DURING_WRITE_MODE_PORT_A NUMERIC "2"
@@ -143,9 +93,9 @@ endmodule
 // Retrieval info: LIBRARY: altera_mf altera_mf.altera_mf_components.all
 // Retrieval info: CONSTANT: CLOCK_ENABLE_INPUT_A STRING "BYPASS"
 // Retrieval info: CONSTANT: CLOCK_ENABLE_OUTPUT_A STRING "BYPASS"
-// Retrieval info: CONSTANT: INIT_FILE STRING "de1_text.mif"
+// Retrieval info: CONSTANT: INIT_FILE STRING "de1_data.mif"
 // Retrieval info: CONSTANT: INTENDED_DEVICE_FAMILY STRING "Cyclone V"
-// Retrieval info: CONSTANT: LPM_HINT STRING "ENABLE_RUNTIME_MOD=YES,INSTANCE_NAME=TEXT"
+// Retrieval info: CONSTANT: LPM_HINT STRING "ENABLE_RUNTIME_MOD=YES,INSTANCE_NAME=DATA"
 // Retrieval info: CONSTANT: LPM_TYPE STRING "altsyncram"
 // Retrieval info: CONSTANT: NUMWORDS_A NUMERIC "1024"
 // Retrieval info: CONSTANT: OPERATION_MODE STRING "SINGLE_PORT"
@@ -166,10 +116,10 @@ endmodule
 // Retrieval info: CONNECT: @data_a 0 0 32 0 data 0 0 32 0
 // Retrieval info: CONNECT: @wren_a 0 0 0 0 wren 0 0 0 0
 // Retrieval info: CONNECT: q 0 0 32 0 @q_a 0 0 32 0
-// Retrieval info: GEN_FILE: TYPE_NORMAL ramI.v TRUE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ramI.inc FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ramI.cmp FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ramI.bsf FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ramI_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ramI_bb.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ramD.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ramD.inc FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ramD.cmp FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ramD.bsf FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ramD_inst.v FALSE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ramD_bb.v TRUE
 // Retrieval info: LIB_FILE: altera_mf

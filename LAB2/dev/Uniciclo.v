@@ -7,23 +7,15 @@ module Uniciclo (
     input  logic        reset,
     input  logic [4:0]  RegIn,
     output logic [31:0] PC, Instr, RegOut
-    );
-    
-    
-initial
-begin
-   PC      <= 32'h0040_0000;
-   Instr   <= 32'b0;
-   RegOut  <= 32'b0;
-end
+);
 
 // fios da instrução
-wire [6:0] opcode = Instr[6:0];
+wire [6:0] opcode = Instr[ 6: 0];
 wire [2:0] funct3 = Instr[14:12];
 wire [6:0] funct7 = Instr[31:25];
 wire [4:0] rs1    = Instr[19:15];
 wire [4:0] rs2    = Instr[24:20];
-wire [4:0] rd     = Instr[11:7];
+wire [4:0] rd     = Instr[11: 7];
 
 // fios de controle
 wire LeMem, EscreveMem, OrigULA, EscreveReg;
@@ -78,7 +70,7 @@ ImmGen GeraImm(.iInstrucao(Instr), .oImm(Imm));
 
 // multiplexadores
 mux4 muxOrigULA (.entr0(Dado2), .entr1(Imm), .sel(OrigULA), .saida(OperadorULA));
-mux4 muxEscrReg (.entr0(MemData), .entr1(SaidaULA), .entr2(PC4), .sel(OrigReg), .saida(DadoEscrita));
+mux4 muxEscrReg (.entr0(SaidaULA), .entr1(MemData), .entr2(PC4), .entr3(Imm), .sel(OrigReg), .saida(DadoEscrita));
 mux4 muxOrigPC  (.entr0(PC4), .entr1(PCImm), .entr2(SaidaULA), .sel(OrigPC), .saida(PCEscrita));
 
 
@@ -87,13 +79,22 @@ adder SomaPC4   (.iA(PC), .iB(32'd4), .out(PC4));
 adder SomaPCImm (.iA(PC), .iB(Imm), .out(PCImm));
 
 
-ALU ULA (.iControl(codULA), .iA(Dado1), .iB(OperadorULA), .oResult(SaidaULA), .Zero(Zero));
+ULA ULA (.iControl(codULA), .iA(Dado1), .iB(OperadorULA), .oResult(SaidaULA), .Zero(Zero));
 
 
 // Instanciação das memórias
-ramI MemC (.address(PC[11:2]), .clock(clockMem), .data(), .wren(1'b0), .q(Instr));
-ramD MemD (.address(SaidaULA[11:2]), .clock(clockMem), .data(Dados2), .wren(EscreveMem), .q(MemData));
+ramI MemI (.address(PC[11:2]), .clock(clockMem), .data(), .wren(1'b0), .q(Instr));
+ramD MemD (.address(SaidaULA[11:2]), .clock(clockMem), .data(Dado2), .wren(EscreveMem), .q(MemData));
 
+
+initial
+begin
+   PC        <= 32'h0040_0000;
+   PCEscrita <= 32'h0040_0004;
+   Instr     <= 32'b0;
+   RegOut    <= 32'b0;
+   SaidaULA  <= 32'b0;
+end
 
 always @(posedge clockCPU  or posedge reset)
 begin
