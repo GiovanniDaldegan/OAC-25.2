@@ -1,9 +1,13 @@
 /*
  * Bloco de controle (combinacional) da ULA
+ * 
+ * Controle das operações:
+ * Genéricas: soma, subtração
+ * Tipo-R:    add, sub, slt, or, and
  *
  * operações:
- * 00 - add
- * 01 - sub
+ * 00 - soma
+ * 01 - subtração
  * 10 - funct
 */
 

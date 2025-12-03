@@ -2,7 +2,16 @@
     `include "Parametros.v"
 `endif
 
-/* Unidade de geração do imediato */
+/* 
+ * Unidade de geração do imediato
+ * 
+ * Suporta as operações:
+ * Tipo-I: opcodes 13, 03, 67 (jalr)
+ * Tipo-U: opcode 37
+ * Tipo-S
+ * Tipo-B
+ * Tipo-J (jal)
+ */
 
 module ImmGen (
     input        [31:0] iInstrucao,

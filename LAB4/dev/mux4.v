@@ -1,9 +1,11 @@
-/* Multiplexador 4x1 com entradas de 32b */
+/*
+ * Multiplexador 4x1 com entradas e sapida de 32b
+ * - Seletor de 2b
+ */
 
 module mux4 (
-   input  wire        enable,
    input  wire [31:0] entr0, entr1, entr2, entr3,
-   input  wire [ 1:0]  sel,
+   input  wire [ 1:0] sel,
    output wire [31:0] saida
 );
 
@@ -14,18 +16,16 @@ end
 
 always @(*)
 begin
-   if (enable) begin
-      case (sel)
-         2'b00:
-            saida <= entr0;
-         2'b01:
-            saida <= entr1;
-         2'b10:
-            saida <= entr2;
-         2'b11:
-            saida <= entr3;
-      endcase
-   end
+   case (sel)
+      2'b00:
+         saida <= entr0;
+      2'b01:
+         saida <= entr1;
+      2'b10:
+         saida <= entr2;
+      2'b11:
+         saida <= entr3;
+   endcase
 end
 
 endmodule

@@ -1,6 +1,8 @@
 /*
- * ALU
- *
+ * ULA
+ * 
+ * Operações suportadas:
+ * and, or, add, sub, slt
  */
 
  `ifndef PARAM

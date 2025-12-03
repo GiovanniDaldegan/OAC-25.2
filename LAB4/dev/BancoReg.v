@@ -1,3 +1,15 @@
+/*
+ * Banco de registradores RV32
+ * - 32 registradores de 32b
+ * - Leitura assíncrona de dois registradores
+ * - Escrita síncrona (com enable) de um registrador na descida do clock
+ * - RESET síncrono na descida do clock
+ * - Não escreve no registrador [0]
+ * - Monitora um registrador de livre escolha para verificação
+ * 
+ * O valor padrão de sp (registrador [2]) 0x1001_03FC
+ */
+
 `ifndef PARAM
    `include "Parametros.v"
 `endif
