@@ -38,7 +38,7 @@ contagem de ciclos considerando a máquina de estados do controle do multiciclo!
 BEQ_EX, JALR_EX, JALR_EX -> ID, pulando os 2 estados de IF
 
 ```
-nº endereço instr        # decompilação                          # regs                      # ciclos
+nº endereço instr        # disassembly                           # regs                      # ciclos
 00 00400000 100101B7     #       lui     gp, 0x10010             # gp: 0x10010000 (.data)    # 5
 01 00400004 00018193     #       addi    gp, gp, 0               #                           # 5
 02 00400008 0001A303     # MAIN: lw      t1, 0(gp)               # t1: 0xFFFFFF0F            # 7
@@ -52,10 +52,10 @@ nº endereço instr        # decompilação                          # regs     
 10 00400028 00028663     #       beq     t0, zero, 12            # tomado, -> PULA           # 4
 13 00400034 00C000EF     # PULA: jal     ra, 12                  # -> PROC                   # 2 (4 -2)
 16 00400040 07F00293     # PROC: addi    t0, zero, 127           # t0: 0x0000007F            # 3 (5 -2)
-17 0051A223 0051A223     #       sw      t0, 4(gp)               # 4(gp): 0x0000007F         # 6
-18 0001A283 0001A283     #       lw      t0, 0(gp)               # t0: 0xFFFFFF0F            # 7
-19 0041A283 0041A283     #       lw      t0, 4(gp)               # t0: 0x0000007F            # 7
-20 00008067 00008067     #       jalr    zero, ra, 0             # -> PULA + 4               # 5
+17 00400044 0051A223     #       sw      t0, 4(gp)               # 4(gp): 0x0000007F         # 6
+18 00400048 0001A283     #       lw      t0, 0(gp)               # t0: 0xFFFFFF0F            # 7
+19 0040004C 0041A283     #       lw      t0, 4(gp)               # t0: 0x0000007F            # 7
+20 00400050 00008067     #       jalr    zero, ra, 0             # -> PULA + 4               # 5
 14 00400038 CCC00293     #       addi    t0, zero, -820          # t0: 0xFFFFFCCC            # 3 (5 -2)
 15 0040003C 0000006F     # FIM:  jal     zero, 0                 #                           # 4
 15 0040003C 0000006F     # FIM:  jal     zero, 0                 #                           # 2* inf (4 -2) (não conta)
