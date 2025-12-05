@@ -60,4 +60,36 @@ parameter
     STACK_ADDRESS   = 32'h1001_03FC,
     GP              = DATA_ADDRESS;
 
+/* Seções dos registradores de transição */
+// IF_ID:  0:31 PC,  32:63 PC4, 64:95 Instr
+// ID_EX:  0:31 PC4, 32:36 rd,  37:68 Dado1,  69:100 Dado2,      101:132 Imm, 133:135 WB, 136:137 MEM, 138:144 EX
+// EX_MEM: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 Dado2,      101:103 WB,  104:105 MEM
+// MEM_WB: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 MemLeitura, 101:103 WB
+
+`define rID_IF_PC            0: 31
+`define rIF_ID_PC4          32: 63
+`define rIF_ID_Instr        64: 95
+
+`define rID_EX_PC4           0: 31
+`define rID_EX_rd           32: 36
+`define rID_EX_Dado1        37: 68
+`define rID_EX_Dado2        69:100
+`define rID_EX_Imm         101:132
+`define rID_EX_WB          133:135
+`define rID_EX_MEM         136:137
+`define rID_EX_EX          138:144
+
+`define rEX_MEM_PC4          0: 31
+`define rEX_MEM_rd          32: 36
+`define rEX_MEM_ResULA      37: 68
+`define rEX_MEM_Dado2       69:100
+`define rEX_MEM_WB         101:103
+`define rEX_MEM_MEM        104:105
+
+`define rMEM_WB_PC4          0: 31
+`define rMEM_WB_rd          32: 36
+`define rMEM_WB_ResULA      37: 68
+`define rMEM_WB_MemLeitura  69:100
+`define rMEM_WB_WB         101:103
+
 `endif
