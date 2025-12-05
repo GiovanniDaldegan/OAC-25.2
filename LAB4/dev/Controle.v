@@ -20,14 +20,12 @@
  * 11 Imm         11             11             11 
  */
 
-`ifndef PARAM
-    `include "Parametros.v"
-`endif
+`include "Parametros.v"
 
 module Controle (
    input  wire [6:0] opcode,
    output wire       EscrevePC, EscreveReg, LeMem,
-                     EscreveMem, OrigAULA, OrigBULA, Jalr
+                     EscreveMem, OrigAULA, OrigBULA, Jalr,
    output wire [1:0] opULA, OrigReg, OrigPC
 );
 

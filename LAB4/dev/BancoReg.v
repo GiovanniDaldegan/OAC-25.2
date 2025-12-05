@@ -10,9 +10,7 @@
  * O valor padrão de sp (registrador [2]) 0x1001_03FC
  */
 
-`ifndef PARAM
-   `include "Parametros.v"
-`endif
+`include "Parametros.v"
 
 module BancoReg (
    input  logic         iCLK, iRST, iRegWrite,

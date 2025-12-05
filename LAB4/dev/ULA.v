@@ -5,10 +5,7 @@
  * and, or, add, sub, slt
  */
 
- `ifndef PARAM
-    `include "Parametros.v"
-`endif
-
+`include "Parametros.v"
  
 module ULA (
     input        [4:0]  iControl,

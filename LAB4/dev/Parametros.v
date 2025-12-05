@@ -66,7 +66,7 @@ parameter
 // EX_MEM: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 Dado2,      101:103 WB,  104:105 MEM
 // MEM_WB: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 MemLeitura, 101:103 WB
 
-`define rID_IF_PC            0: 31
+`define rIF_ID_PC            0: 31
 `define rIF_ID_PC4          32: 63
 `define rIF_ID_Instr        64: 95
 

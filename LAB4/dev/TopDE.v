@@ -1,7 +1,3 @@
-`ifndef PARAM
-   `include "Parametros.v"
-`endif
-
 module TopDE (
    input  logic        CLOCK, Reset,
    output logic        ClockDIV,
