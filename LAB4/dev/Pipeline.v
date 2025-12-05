@@ -25,7 +25,7 @@ wire [4:0] rs2    = Instr:IF_ID[24:20];
 wire [4:0] rd     = Instr:IF_ID[11: 7];
 
 // fios de controle
-wire LeMem, EscreveMem, EscreveReg, Jalr;
+wire LeMem, EscreveMem, EscreveReg, jalr;
 wire [1:0] OrigRd, OrigAULA, OrigBULA, opULA; // OrigPC depende de beq, jal (ID) e jalr (EX)
 wire [4:0] codULA;
 
@@ -54,7 +54,7 @@ reg [144:0] ID_EX;   // 0:31 PC4, 32:36 rd,  37:68 Dado1,  69:100 Dado2,      10
 reg [105:0] EX_MEM;  // 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 Dado2,      101:103 WB,  104:105 MEM
 reg [103:0] MEM_WB;  // 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 MemLeitura, 101:103 WB
 
-// sinais EX  0:1 OrigAULA    2:3 OrigBULA    4:5 opULA  6 Jalr
+// sinais EX  0:1 OrigAULA    2:3 OrigBULA    4:5 opULA  6 jalr
 // sinais MEM 0   LeMem       1   EscreveMem
 // sinais WB  0   EscreveReg  1:2 OrigReg
 
@@ -71,7 +71,7 @@ mux4 muxOrigB     (.entr0(Dado2:ID_EX),   .entr2(Imm),   .sel(OrigBULA:ID_EX), .
 
 ControlePipe Controle (
    .opcode(opcode),
-   .EscrevePC(EscrevePC), .EscrevePCCond(EscrevePCCond),
+   .EscrevePC(EscrevePC), .EscrevePCCond(EscrevePCCond), .jalr(jalr)
    .LeMem(LeMem), .EscreveMem(EscreveMem), .EscreveReg(EscreveReg),
    .OrigRd(OrigRd), .OrigAULA(OrigAULA), .OrigBULA(OrigBULA), .opULA(opULA), //.OrigPC(OrigPC)
 );
