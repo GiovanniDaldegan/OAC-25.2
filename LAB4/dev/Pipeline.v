@@ -1,6 +1,7 @@
-`ifndef PARAM
-	`include "Parametros.v"
-`endif
+
+
+`include "Parametros.v"
+
 
 module Pipeline (
    input  logic        clockCPU, clockMem, reset,
@@ -17,15 +18,15 @@ module Pipeline (
 // TODO: substituir os pseudo-fios aí no formato fio:reg por seções dos registradores de transição
 
 // fios da instrução
-wire [6:0] opcode = Instr:IF_ID[ 6: 0];
-wire [2:0] funct3 = Instr:IF_ID[14:12];
-wire [6:0] funct7 = Instr:IF_ID[31:25];
-wire [4:0] rs1    = Instr:IF_ID[19:15];
-wire [4:0] rs2    = Instr:IF_ID[24:20];
-wire [4:0] rd     = Instr:IF_ID[11: 7];
+wire [6:0] opcode = IF_ID_Instr[ 6: 0];
+wire [2:0] funct3 = IF_ID_Instr[14:12];
+wire [6:0] funct7 = IF_ID_Instr[31:25];
+wire [4:0] rs1    = IF_ID_Instr[19:15];
+wire [4:0] rs2    = IF_ID_Instr[24:20];
+wire [4:0] rd     = IF_ID_Instr[11: 7];
 
 // fios de controle
-wire LeMem, EscreveMem, EscreveReg, Jalr;
+wire LeMem, EscreveMem, EscreveReg, jalr;
 wire [1:0] OrigRd, OrigAULA, OrigBULA, opULA; // OrigPC depende de beq, jal (ID) e jalr (EX)
 wire [4:0] codULA;
 
@@ -54,31 +55,71 @@ reg [144:0] ID_EX;   // 0:31 PC4, 32:36 rd,  37:68 Dado1,  69:100 Dado2,      10
 reg [105:0] EX_MEM;  // 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 Dado2,      101:103 WB,  104:105 MEM
 reg [103:0] MEM_WB;  // 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 MemLeitura, 101:103 WB
 
-// sinais EX  0:1 OrigAULA    2:3 OrigBULA    4:5 opULA  6 Jalr
+// sinais EX  0:1 OrigAULA    2:3 OrigBULA    4:5 opULA  6 jalr
 // sinais MEM 0   LeMem       1   EscreveMem
 // sinais WB  0   EscreveReg  1:2 OrigReg
 
+// seções dos regs de transição
+wire [31:0]
+   IF_ID_PC      = IF_ID[`rIF_ID_PC],
+   IF_ID_PC4     = IF_ID[`rIF_ID_PC4],   // NOTE checar se pode fazer isso
+   IF_ID_Instr   = IF_ID[`rIF_ID_Instr];
+
+wire [31:0]
+            ID_EX_PC4     = ID_EX[`rID_EX_PC4],
+            ID_EX_Dado1   = ID_EX[`rID_EX_Dado1],
+            ID_EX_Dado2   = ID_EX[`rID_EX_Dado2],
+            ID_EX_Imm     = ID_EX[`rID_EX_Imm];
+wire [4:0]  ID_EX_rd      = ID_EX[`rID_EX_rd];
+wire [2:0]  ID_EX_WB      = ID_EX[`rID_EX_WB];
+wire [1:0]  ID_EX_MEM     = ID_EX[`rID_EX_MEM];
+wire [6:0]  ID_EX_EX      = ID_EX[`rID_EX_EX];
+
+wire [31:0] EX_MEM_PC4    = EX_MEM[`rEX_MEM_PC4],
+            EX_MEM_ResULA = EX_MEM[`rEX_MEM_ResULA],
+            EX_MEM_Dado2  = EX_MEM[`rEX_MEM_Dado2];
+wire [4:0]  EX_MEM_rd     = EX_MEM[`rEX_MEM_rd];
+wire [2:0]  EX_MEM_WB     = EX_MEM[`rEX_MEM_WB];
+wire [1:0]  EX_MEM_MEM    = EX_MEM[`rEX_MEM_MEM];
+
+wire [31:0]
+            MEM_WB_PC4          = MEM_WB[`rMEM_WB_PC4],
+            MEM_WB_ResULA       = MEM_WB[`rMEM_WB_ResULA],
+            MEM_WB_MemLeitura   = MEM_WB[`rMEM_WB_MemLeitura];
+wire [4:0]  MEM_WB_rd           = MEM_WB[`rMEM_WB_rd];
+wire [2:0]  MEM_WB_WB           = MEM_WB[`rMEM_WB_WB];
+
+/*
+wire [31:0] IF_ID_PC, IF_ID_PC4, IF_ID_Instr, ID_EX_PC4, ID_EX_Dado1, ID_EX_Dado2, ID_EX_Imm,
+            EX_MEM_PC4, EX_MEM_ResULA, EX_MEM_Dado2, MEM_WB_PC4, MEM_WB_ResULA, MEM_WB_MemLeitura;
+wire [4:0] ID_EX_rd, EX_MEM_rd, MEM_WB_rd;
+wire [2:0] ID_EX_WB, EX_MEM_WB, MEM_WB_WB;
+wire [1:0] ID_EX_MEM, EX_MEM_MEM;
+wire [6:0] ID_EX_EX;
+*/
+
 
 // módulos
-adder SomaPC4   (.iA(PC), .iB(32'b4), .out(PC4));
+
+adder SomaPC4   (.iA(PC), .iB(32'd4), .out(PC4));
 adder SomaPCIMM (.iA(PC), .iB(Imm),   .out(PCImm));
 
-mux4 muxOrigPC    (.entr0(PC4),  .entr1(PCImm), .entr2(ResULA) .sel(),   .saida(PCEscrita));
-mux4 muxOrigRd    (.entr0(ResULA:MEM_WB), .entr1(MemLeitura:MEM_WB), .entr2(PC4:IF_ID), .sel(OrigRd:MEM_WB), .saida(DadoEscrReg));
-mux4 muxOrigA     (.entr0(Dado1:ID_EX),   .entr1(0), .sel(OrigAULA:ID_EX), .saida(AULA));
-mux4 muxOrigB     (.entr0(Dado2:ID_EX),   .entr2(Imm),   .sel(OrigBULA:ID_EX), .saida(BULA));
+mux4 muxOrigPC (.entr0(PC4),           .entr1(PCImm),             .entr2(ResULA),     .sel(),               .saida(PCEscrita));
+mux4 muxOrigRd (.entr0(MEM_WB_ResULA), .entr1(MEM_WB_MemLeitura), .entr2(MEM_WB_PC4), .sel(MEM_WB_OrigRd),  .saida(DadoEscrReg));
+mux4 muxOrigA  (.entr0(ID_EX_Dado1),   .entr1(0),                                     .sel(ID_EX_OrigAULA), .saida(AULA));
+mux4 muxOrigB  (.entr0(ID_EX_Dado2),   .entr2(Imm),                                   .sel(ID_EX_OrigBULA), .saida(BULA));
 
 
 ControlePipe Controle (
    .opcode(opcode),
-   .EscrevePC(EscrevePC), .EscrevePCCond(EscrevePCCond),
+   .EscrevePC(EscrevePC), .EscrevePCCond(EscrevePCCond), .jalr(jalr),
    .LeMem(LeMem), .EscreveMem(EscreveMem), .EscreveReg(EscreveReg),
-   .OrigRd(OrigRd), .OrigAULA(OrigAULA), .OrigBULA(OrigBULA), .opULA(opULA), //.OrigPC(OrigPC)
+   .OrigReg(OrigReg), .OrigAULA(OrigAULA), .OrigBULA(OrigBULA), .opULA(opULA), //.OrigPC(OrigPC)
 );
 
-ControleULA ControleULA (.opULA(opULA:ID_MEM), .funct3(funct3:ID_MEM), .funct7(funct7:ID_MEM), .codULA(codULA));
+ControleULA ControleULA (.opULA(ID_EX_opULA), .funct3(ID_EX_funct3), .funct7(ID_EX_funct7), .codULA(codULA));
 
-ImmGen ImmGen (.iInstrucao(Instr), .oImm(Imm));
+ImmGen ImmGen (.iInstrucao(IF_ID_Instr), .oImm(Imm));
 
 BancoReg BancoReg (
    .iCLK(clockCPU), .iRST(reset), .iRegWrite(EscreveReg),
@@ -105,32 +146,31 @@ always @(posedge clockCPU  or posedge reset) begin
       PC <= 32'h0040_0000;
    end
    else
-      // TODO: criar fios para cada dado ou puxar do reg de transição anterior
-      MEM_WB [  0: 31] = PC4;          // [começo] puxar de EX_MEM
-      MEM_WB [ 32: 36] = rd;
-      MEM_WB [ 37: 68] = ResULA;
-      MEM_WB [ 69:100] = MemLeitura;   // [fim]
-      MEM_WB [101:103] = WB;           // abrir WB, MEM, EX
+      MEM_WB [`rMEM_WB_PC4]         = EX_MEM_PC4;
+      MEM_WB [`rMEM_WB_rd]          = EX_MEM_rd;
+      MEM_WB [`rMEM_WB_ResULA]      = EX_MEM_ResULA;
+      MEM_WB [`rMEM_WB_MemLeitura]  = MemLeitura;
+      MEM_WB [`rMEM_WB_WB]          = EX_MEM_WB;
       
-      EX_MEM [  0: 31] = PC4;          // puxar de ID_EX
-      EX_MEM [ 32: 36] = rd;           // puxar de ID_EX
-      EX_MEM [ 37: 68] = ResULA;
-      EX_MEM [ 69:100] = Dado2;        // [começo] puxar de ID_EX
-      EX_MEM [101:103] = WB;
-      EX_MEM [104:105] = MEM;          // [fim]
+      EX_MEM [`rEX_MEM_PC4]         = ID_EX_PC4;
+      EX_MEM [`rEX_MEM_rd]          = ID_EX_rd;
+      EX_MEM [`rEX_MEM_ResULA]      = ResULA;
+      EX_MEM [`rEX_MEM_Dado2]       = ID_EX_Dado2;
+      EX_MEM [`rEX_MEM_WB]          = ID_EX_WB;
+      EX_MEM [`rEX_MEM_MEM]         = ID_EX_MEM;
       
-      ID_EX [  0: 31] = PC4;           // puxar de IF_ID
-      ID_EX [ 32: 36] = rd;
-      ID_EX [ 37: 68] = Dado1;
-      ID_EX [ 69:100] = Dado2;
-      ID_EX [101:132] = Imm;
-      ID_EX [133:135] = WB;
-      ID_EX [136:137] = MEM;
-      ID_EX [138:144] = EX;
+      ID_EX  [`rID_EX_PC4]          = IF_ID_PC4;
+      ID_EX  [`rID_EX_rd]           = rd;
+      ID_EX  [`rID_EX_Dado1]        = Dado1;
+      ID_EX  [`rID_EX_Dado2]        = Dado2;
+      ID_EX  [`rID_EX_Imm]          = Imm;
+      ID_EX  [`rID_EX_WB]           = {EscreveReg, OrigReg};   //WB
+      ID_EX  [`rID_EX_MEM]          = {LeMem, EscreveMem};     //MEM
+      ID_EX  [`rID_EX_EX]           = {OrigAULA, OrigBULA, opULA, jalr}; //EX
       
-      IF_ID [ 0:31] = PC;
-      IF_ID [32:63] = PC4;
-      IF_ID [64:95] = Instr;
+      IF_ID  [`rIF_ID_PC]           = PC;
+      IF_ID  [`rIF_ID_PC4]          = PC4;
+      IF_ID  [`rIF_ID_Instr]        = Instr;
 end
 
 endmodule

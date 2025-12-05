@@ -1,7 +1,3 @@
-`ifndef PARAM
-    `include "Parametros.v"
-`endif
-
 /* 
  * Unidade de geração do imediato
  * 
@@ -12,6 +8,8 @@
  * Tipo-B
  * Tipo-J (jal)
  */
+
+`include "Parametros.v"
 
 module ImmGen (
     input        [31:0] iInstrucao,
