@@ -14,18 +14,23 @@ module Pipeline (
 
 // fios e registradores
 
+// TODO: substituir os pseudo-fios aí no formato fio:reg por seções dos registradores de transição
+
 // fios da instrução
-wire [6:0] opcode = Instr[ 6: 0];
-wire [2:0] funct3 = Instr[14:12];
-wire [6:0] funct7 = Instr[31:25];
-wire [4:0] rs1    = Instr[19:15];
-wire [4:0] rs2    = Instr[24:20];
-wire [4:0] rd     = Instr[11: 7];
+wire [6:0] opcode = Instr:IF_ID[ 6: 0];
+wire [2:0] funct3 = Instr:IF_ID[14:12];
+wire [6:0] funct7 = Instr:IF_ID[31:25];
+wire [4:0] rs1    = Instr:IF_ID[19:15];
+wire [4:0] rs2    = Instr:IF_ID[24:20];
+wire [4:0] rd     = Instr:IF_ID[11: 7];
 
 // fios de controle
 wire LeMem, EscreveMem, EscreveReg, Jalr;
 wire [1:0] OrigRd, OrigAULA, OrigBULA, opULA; // OrigPC depende de beq, jal (ID) e jalr (EX)
 wire [4:0] codULA;
+
+// fios dos somadores
+wire [31:0] PC4, PCImm;
 
 // fios dos multiplexadores
 wire [31:0] DadoEscrReg, PCEscrita, AULA, BULA;
@@ -43,13 +48,6 @@ wire [31:0] Dado1, Dado2;
 wire [31:0] EnderecoMem, MemLeitura;
 
 
-wire [31:0] SaidaULA, Leitura2,B;
-wire EscreveMem;
-
-wire [31:0] MemData;
-
-assign EscreveMem = 1'b0;
-
 // registradores de transição
 reg [ 95:0] IF_ID;   // 0:31 PC,  32:63 PC4, 64:95 Instr
 reg [144:0] ID_EX;   // 0:31 PC4, 32:36 rd,  37:68 Dado1,  69:100 Dado2,      101:132 Imm, 133:135 WB, 136:137 MEM, 138:144 EX
@@ -62,10 +60,38 @@ reg [103:0] MEM_WB;  // 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 MemLeitura, 10
 
 
 // módulos
+adder SomaPC4   (.iA(PC), .iB(32'b4), .out(PC4));
+adder SomaPCIMM (.iA(PC), .iB(Imm),   .out(PCImm));
+
+mux4 muxOrigPC    (.entr0(PC4),  .entr1(PCImm), .entr2(ResULA) .sel(),   .saida(PCEscrita));
+mux4 muxOrigRd    (.entr0(ResULA:MEM_WB), .entr1(MemLeitura:MEM_WB), .entr2(PC4:IF_ID), .sel(OrigRd:MEM_WB), .saida(DadoEscrReg));
+mux4 muxOrigA     (.entr0(Dado1:ID_EX),   .entr1(0), .sel(OrigAULA:ID_EX), .saida(AULA));
+mux4 muxOrigB     (.entr0(Dado2:ID_EX),   .entr2(Imm),   .sel(OrigBULA:ID_EX), .saida(BULA));
 
 
-ramI MemC (.address(PC[11:2]), .clock(clockMem), .data(), .wren(1'b0), .q(Instr));
-ramD MemD (.address(SaidaULA[11:2]), .clock(clockMem), .data(B), .wren(EscreveMem), .q(MemData));
+ControlePipe Controle (
+   .opcode(opcode),
+   .EscrevePC(EscrevePC), .EscrevePCCond(EscrevePCCond),
+   .LeMem(LeMem), .EscreveMem(EscreveMem), .EscreveReg(EscreveReg),
+   .OrigRd(OrigRd), .OrigAULA(OrigAULA), .OrigBULA(OrigBULA), .opULA(opULA), //.OrigPC(OrigPC)
+);
+
+ControleULA ControleULA (.opULA(opULA:ID_MEM), .funct3(funct3:ID_MEM), .funct7(funct7:ID_MEM), .codULA(codULA));
+
+ImmGen ImmGen (.iInstrucao(Instr), .oImm(Imm));
+
+BancoReg BancoReg (
+   .iCLK(clockCPU), .iRST(reset), .iRegWrite(EscreveReg),
+   .iReadRegister1(rs1), .iReadRegister2(rs2), .iWriteRegister(rd),
+   .iWriteData(DadoEscrReg), .oReadData1(Dado1), .oReadData2(Dado2),
+   .iRegDispSelect(regin), .oRegDisp(regout)
+);
+
+ULA ULA (.iControl(codULA), .iA(AULA), .iB(BULA), .oResult(ResULA));
+
+// memórias
+ramI MemI (.address(PC[11:2]), .clock(clockMem), .data(), .wren(1'b0), .q(Instr));
+ramD MemD (.address(ResULA[11:2]), .clock(clockMem), .data(DadoEscrMem), .wren(EscreveMem), .q(MemLeitura));
 
 
 initial begin
@@ -79,8 +105,6 @@ always @(posedge clockCPU  or posedge reset) begin
       PC <= 32'h0040_0000;
    end
    else
-      PC <= PC+4;
-      
       // TODO: criar fios para cada dado ou puxar do reg de transição anterior
       MEM_WB [  0: 31] = PC4;          // [começo] puxar de EX_MEM
       MEM_WB [ 32: 36] = rd;
