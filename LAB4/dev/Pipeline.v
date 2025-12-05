@@ -14,13 +14,42 @@ module Pipeline (
 
 // fios e registradores
 
+// fios da instrução
+wire [6:0] opcode = Instr[ 6: 0];
+wire [2:0] funct3 = Instr[14:12];
+wire [6:0] funct7 = Instr[31:25];
+wire [4:0] rs1    = Instr[19:15];
+wire [4:0] rs2    = Instr[24:20];
+wire [4:0] rd     = Instr[11: 7];
+
+// fios de controle
+wire LeMem, EscreveMem, EscreveReg, Jalr;
+wire [1:0] OrigRd, OrigAULA, OrigBULA, opULA; // OrigPC depende de beq, jal (ID) e jalr (EX)
+wire [4:0] codULA;
+
+// fios dos multiplexadores
+wire [31:0] DadoEscrReg, PCEscrita, AULA, BULA;
+
+// fio do gerador de imediatos
+wire [31:0] Imm;
+
+// fios da ULA
+wire [31:0] ResULA;
+
+// fios de leitura do banco de registradores
+wire [31:0] Dado1, Dado2;
+
+// fios da memória
+wire [31:0] EnderecoMem, MemLeitura;
+
+
 // registradores de transição
 // IF_ID, ID_EX, EX_MEM, MEM_WB;
 
 wire [31:0] SaidaULA, Leitura2,B;
 wire EscreveMem;
 
-wire [31:0] wIouD, MemData;
+wire [31:0] MemData;
 
 assign EscreveMem = 1'b0;
 
