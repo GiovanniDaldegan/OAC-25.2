@@ -220,6 +220,8 @@ assign ID_EX_Dado1 = ID_EX[`rID_EX_Dado1],
        MEM_WB_WB = MEM_WB[`rMEM_WB_WB];
 */
 
+assign Igual = (Dado1 == Dado2);
+
 always @(posedge clockCPU  or posedge reset) begin
    if (reset) begin
       PC     <= 32'h0040_0000;
