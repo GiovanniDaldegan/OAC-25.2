@@ -62,7 +62,7 @@ parameter
 
 /* Seções dos registradores de transição */
 // IF_ID:  0:31 PC,  32:63 PC4, 64:95 Instr
-// ID_EX:  0:31 PC4, 32:36 rd,  37:68 Dado1,  69:100 Dado2,      101:132 Imm, 133:135 WB, 136:137 MEM, 138:144 EX
+// ID_EX:  0:31 PC4, 32:36 rd,  37:68 Dado1,  69:100 Dado2,      101:132 Imm, 133:135 WB, 136:137 MEM, 138:154 EX
 // EX_MEM: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 Dado2,      101:132 Imm, 133:135 WB, 136:137 MEM
 // MEM_WB: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 MemLeitura, 101:132 Imm, 133:135 WB
 
