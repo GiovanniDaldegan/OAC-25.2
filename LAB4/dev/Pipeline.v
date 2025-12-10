@@ -223,8 +223,6 @@ assign ID_EX_Dado1 = ID_EX[`rID_EX_Dado1],
 always @(posedge clockCPU  or posedge reset) begin
    if (reset) begin
       PC     <= 32'h0040_0000;
-      Instr  <= 32'b0;
-      regout <= 32'b0;
       
       // opção 1
       /*
