@@ -13,6 +13,9 @@ module TopDE (
 initial
    ClockDIV <= 1'b1;
 
+always @(*)
+   ClockDIV <= ~CLOCK;
+   
 /*
 Uniciclo UNI1 (.clockCPU(ClockDIV), .clockMem(CLOCK), .reset(Reset),
                .PC(PC), .Instr(Instr), .RegIn(Regin), .RegOut(Regout));
