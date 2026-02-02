@@ -5,10 +5,10 @@ disassembly de acordo com o ISCTools
 
 ## 1 Geral
 
-### 1.1 Programa de1.s montado
+### 1.1 Programa de1.s montado - Uniciclo, Multiciclo
 Concide com o resultado do TopDE.vwf no envio do LAB2 pelo aprender3, ou seja,
 sem pulos condicionais ou incondicionais, apenas PC + 4
-
+02028063
 ```
 nº endereço
 00 00400000 100101B7     #       lui     gp, 0x10010             # gp: 0x10010000 (.data)
@@ -34,6 +34,56 @@ nº endereço
 20 00400050 00008067     #       jalr    zero, ra, 0             # -> PULA + 4
 ```
 
+### 1.2 Programa de1.s montado - Pipeline
+```
+nº endereço
+00 00400000 100101B7    #       lui     gp, 0x10010             # gp: 0x10010000 (.data)
+01 00400004 00000013    #       nop
+02 00400008 00000013    #       nop
+03 0040000C 00000013    #       nop
+04 00400010 0001A303    # MAIN: lw      t1, 0(gp)               # t1: 0xFFFFFF0F
+05 004000 77700393    #       addi    t2, zero, 1911          # t2: 0x00000777
+06 00400004 00000013    #       nop
+06 00400004 00000013    #       nop
+06 00400004 00000013    #       nop
+04 004000 007372B3    #       and     t0, t1, t2              # t0: 0x00000707
+05 004000 007362B3    #       or      t0, t1, t2              # t0: 0xFFFFFF7F
+06 004000 006382B3    #       add     t0, t2, t1              # t0: 0x00000686 (overflow)
+07 004000 406382B3    #       sub     t0, t2, t1              # t0: 0xFFFFF798
+08 004000 007322B3    #       slt     t0, t1, t2              # t0: 0x00000001
+09 004000 0063A2B3    #       slt     t0, t2, t1              # t0: 0x00000000
+06 00400004 00000013    #       nop
+06 00400004 00000013    #       nop
+06 00400004 00000013    #       nop
+10 004000 00028663    #       beq     t0, zero, 12            # tomado, -> PULA
+01 00400004 00000013    #       nop
+11 004000 EEE00293    #       addi    t0, zero, -274          # t0: 0xFFFFFEEE
+06 00400004 00000013    #       nop
+06 00400004 00000013    #       nop
+06 00400004 00000013    #       nop
+12 004000 00C0006F    #       jal     zero, 12                # 
+01 00400004 00000013    #       nop
+13 004000 00C000EF    # PULA: jal     ra, 12                  # -> PROC
+01 00400004 00000013    #       nop
+14 004000 CCC00293    #       addi    t0, zero, -820          # t0: 0xFFFFFCCC
+01 00400004 00000013    #       nop
+01 00400004 00000013    #       nop
+01 00400004 00000013    #       nop
+15 004000 0000006F    # FIM:  jal     zero, 0                 #
+16 004000 07F00293    # PROC: addi    t0, zero, 127           # t0: 0x0000007F
+17 004000 0051A223    #       sw      t0, 4(gp)               # 4(gp): 0x0000007F
+18 004000 0001A283    #       lw      t0, 0(gp)               # t0: 0xFFFFFF0F
+19 004000 0041A283    #       lw      t0, 4(gp)               # t0: 0x0000007F
+20 004000 00008067    #       jalr    zero, ra, 0             # -> PULA + 4
+21
+22
+23
+24
+25
+26
+
+```
+
 ### 1.2 imediatos das instruções
 ```
 00 00400000 100101B7        # lui     gp, 0x10010       # imm: 10010000
@@ -54,7 +104,7 @@ nº endereço
 ```
 
 
-### 1.3 Sequência de instruções esperada
+### 1.3 Sequência de instruções esperada - Uniciclo, Multiciclo
 
 ```
 nº endereço instr        # disassembly                           # regs
@@ -78,6 +128,36 @@ nº endereço instr        # disassembly                           # regs
 14 00400038 CCC00293     #       addi    t0, zero, -820          # t0: 0xFFFFFCCC
 15 0040003C 0000006F     # FIM:  jal     zero, 0                 #
 15 0040003C ... loop infinito
+```
+
+### 1.3 Sequência de instruções esperada - Uniciclo, Multiciclo
+
+```
+nº endereço instr        # disassembly                           # regs
+00 00400000 100101B7     #       lui     gp, 0x10010             # gp: 0x10010000 (.data)
+01 
+02 00400008 0001A303     # MAIN: lw      t1, 0(gp)               # t1: 0xFFFFFF0F
+03 0040000C 77700393     #       addi    t2, zero, 1911          # t2: 0x00000777
+04 00400010 007372B3     #       and     t0, t1, t2              # t0: 0x00000707
+05 00400014 007362B3     #       or      t0, t1, t2              # t0: 0xFFFFFF7F
+06 00400018 006382B3     #       add     t0, t2, t1              # t0: 0x00000686 (overflow)
+07 0040001C 406382B3     #       sub     t0, t2, t1              # t0: 0x00000868 (underflow)
+08 00400020 007322B3     #       slt     t0, t1, t2              # t0: 0x00000001
+09 00400024 0063A2B3     #       slt     t0, t2, t1              # t0: 0x00000000
+10 00400028 00028663     #       beq     t0, zero, 12            # tomado, -> PULA
+13 00400034 00C000EF     # PULA: jal     ra, 12                  # -> PROC
+16 00400040 07F00293     # PROC: addi    t0, zero, 127           # t0: 0x0000007F
+17 00400044 0051A223     #       sw      t0, 4(gp)               # 4(gp): 0x0000007F
+18 00400048 0001A283     #       lw      t0, 0(gp)               # t0: 0xFFFFFF0F
+19 0040004C 0041A283     #       lw      t0, 4(gp)               # t0: 0x0000007F
+20 00400050 00008067     #       jalr    zero, ra, 0             # -> PULA + 4 (ra)
+14 00400038 CCC00293     #       addi    t0, zero, -820          # t0: 0xFFFFFCCC
+15 0040003C 0000006F     # FIM:  jal     zero, 0                 #
+16
+17
+18 
+19
+ 0040003C ... loop infinito
 ```
 
 ## 2 Execuções nos processadores
