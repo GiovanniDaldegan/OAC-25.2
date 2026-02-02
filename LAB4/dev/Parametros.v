@@ -60,11 +60,18 @@ parameter
     STACK_ADDRESS   = 32'h1001_03FC,
     GP              = DATA_ADDRESS;
 
-/* Seções dos registradores de transição */
-// IF_ID:  0:31 PC,  32:63 PC4, 64:95 Instr
-// ID_EX:  0:31 PC4, 32:36 rd,  37:68 Dado1,  69:100 Dado2,      101:132 Imm, 133:135 WB, 136:137 MEM, 138:154 EX
-// EX_MEM: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 Dado2,      101:132 Imm, 133:135 WB, 136:137 MEM
-// MEM_WB: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 MemLeitura, 101:132 Imm, 133:135 WB
+/*
+ * Seções dos registradores de transição 
+ *
+ * IF_ID:  0:31 PC,  32:63 PC4, 64:95 Instr
+ * ID_EX:  0:31 PC4, 32:36 rd,  37:68 Dado1,  69:100 Dado2,      101:132 Imm, 133:135 WB, 136:137 MEM, 138:154 EX
+ * EX_MEM: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 Dado2,      101:132 Imm, 133:135 WB, 136:137 MEM
+ * MEM_WB: 0:31 PC4, 32:36 rd,  37:68 ResULA, 69:100 MemLeitura, 101:132 Imm, 133:135 WB
+ *
+ * sinais EX:  0:1 OrigAULA,    2:3 OrigBULA,    4:5 opULA,  6 jalr,   7:9 funct3,  10:16 funct7
+ * sinais MEM: 0   LeMem,       1   EscreveMem
+ * sinais WB:  0   EscreveReg,  1:2 OrigReg
+ */
 
 `define rIF_ID_PC           31:  0
 `define rIF_ID_PC4          63: 32

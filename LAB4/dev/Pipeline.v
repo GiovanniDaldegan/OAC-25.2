@@ -116,7 +116,7 @@ IF_ID  IF_ID (
 ID_EX  ID_EX (
    .clock(clockCPU), .reset(reset),
    .iPC4(IF_ID_PC4), .iDado1(Dado1), .iDado2(Dado2), .iImm(Imm), .ird(rd),
-   .iWB({EscreveReg, OrigReg}), .iMEM({LeMem, EscreveMem}), .iEX({OrigAULA, OrigBULA, opULA, jalr}),
+   .iWB({OrigReg, EscreveReg}), .iMEM({EscreveMem, LeMem}), .iEX({func7, funct3, jalr, opULA, OrigBULA, OrigAULA}),
    
    .oPC4(ID_EX_PC4), .oDado1(ID_EX_Dado1), .oDado2(ID_EX_Dado2), .oImm(ID_EX_Imm), .ord(ID_EX_rd),
    .oWB(ID_EX_WB), .oMEM(ID_EX_MEM), .oEX(ID_EX_EX)
@@ -172,7 +172,7 @@ BancoReg BancoReg (
 ULA ULA (.iControl(codULA), .iA(AULA), .iB(BULA), .oResult(ResULA));
 
 // memórias
-ramI MemI (.address(PC[11:2]),            .clock(clockMem), .data(),            .wren(1'b0),          .q(Instr));
+ramI MemI (.address(PC[11:2]),            .clock(clockMem), .data(),             .wren(1'b0),          .q(Instr));
 ramD MemD (.address(EX_MEM_ResULA[11:2]), .clock(clockMem), .data(EX_MEM_Dado2), .wren(EX_MEM_MEM[1]), .q(MemLeitura));
 
 
